@@ -4,18 +4,18 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css"; // Import global styles
 
-import Home from './pages/Home';
-import JobFinder from './pages/JobFinder';
-import ContactUs from './pages/ContactUs';
-import MyProfile from './pages/MyProfile';
-import InterviewPractice from './pages/InterviewPractice';
-import InterviewSettings from './pages/InterviewSettings';
-
+import Home from "./pages/Home";
+import JobFinder from "./pages/JobFinder";
+import ContactUs from "./pages/ContactUs";
+import MyProfile from "./pages/MyProfile";
+import InterviewPractice from "./pages/InterviewPractice";
+import InterviewSettings from "./pages/InterviewSettings";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 function App() {
   return (
     <Router>
-      <div>
+      <div className="d-flex flex-column min-vh-100">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
           <Link className="navbar-brand" to="/">
             <img
@@ -68,15 +68,87 @@ function App() {
           </div>
         </nav>
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/interview-settings" element={<InterviewSettings />} />
-          <Route path="/interview-practice" element={<InterviewPractice />} />
-          <Route path="/job-finder" element={<JobFinder />} />
-          <Route path="/contact-us" element={<ContactUs />} />
-          <Route path="/my-profile" element={<MyProfile />} />
-        </Routes>
+        <div className="flex-grow-1">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/interview-settings" element={<InterviewSettings />} />
+            <Route path="/interview-practice" element={<InterviewPractice />} />
+            <Route path="/job-finder" element={<JobFinder />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/my-profile" element={<MyProfile />} />
+          </Routes>
+        </div>
       </div>
+
+      <footer
+        className="text-center text-white mt-auto"
+        style={{ backgroundColor: "#67a9d2" }}
+      >
+        <div class="container p-4 pb-0">
+          <section class="mb-4">
+            <a
+              class="btn btn-outline-light btn-floating m-1"
+              href="#!"
+              role="button"
+            >
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a
+              class="btn btn-outline-light btn-floating m-1"
+              href="#!"
+              role="button"
+            >
+              <i class="fab fa-twitter"></i>
+            </a>
+
+            <a
+              class="btn btn-outline-light btn-floating m-1"
+              href="#!"
+              role="button"
+            >
+              <i class="fab fa-google"></i>
+            </a>
+            <a
+              class="btn btn-outline-light btn-floating m-1"
+              href="#!"
+              role="button"
+            >
+              <i class="fab fa-instagram"></i>
+            </a>
+
+            <a
+              class="btn btn-outline-light btn-floating m-1"
+              href="#!"
+              role="button"
+            >
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+
+            <a
+              class="btn btn-outline-light btn-floating m-1"
+              href="https://github.com/SOFTENG310-Team4/SMARTJ"
+              role="button"
+            >
+              <i class="fab fa-github"></i>
+            </a>
+          </section>
+        </div>
+        <div
+          className="text-center p-3"
+          style={{
+            backgroundColor: "#c7e2fd",
+            color: "black",
+          }}
+        >
+          © 2024 Copyright:
+          <a
+            class="text-black"
+            href="https://github.com/SOFTENG310-Team4/SMARTJ/"
+          >
+            SMARTJ.co.nz
+          </a>
+        </div>
+      </footer>
     </Router>
   );
 }
