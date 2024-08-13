@@ -11,6 +11,7 @@ import MyProfile from "./pages/MyProfile";
 import InterviewPractice from "./pages/InterviewPractice";
 import InterviewSettings from "./pages/InterviewSettings";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import SummaryPage from "./pages/SummaryPage";
 
 function App() {
   return (
@@ -68,16 +69,15 @@ function App() {
           </div>
         </nav>
 
-        <div className="flex-grow-1">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/interview-settings" element={<InterviewSettings />} />
-            <Route path="/interview-practice" element={<InterviewPractice />} />
-            <Route path="/job-finder" element={<JobFinder />} />
-            <Route path="/contact-us" element={<ContactUs />} />
-            <Route path="/my-profile" element={<MyProfile />} />
-          </Routes>
-        </div>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/interview-settings" element={<InterviewSettings />} />
+          <Route path="/interview-practice" element={<InterviewPractice />} />
+          <Route path="/job-finder" element={<JobFinder />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/my-profile" element={<MyProfile />} />
+          <Route path="/summary" element={<SummaryPage />} />
+        </Routes>
       </div>
 
       <footer
