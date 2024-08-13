@@ -27,6 +27,7 @@ function App() {
             />
             SMARTJ
           </Link>
+          {/* Toggle button for collapsing the navbar in smaller screens */}
           <button
             className="navbar-toggler"
             type="button"
@@ -38,6 +39,7 @@ function App() {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
+          {/* Collapsible part of the navbar containing links */}
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
@@ -45,6 +47,7 @@ function App() {
                   Home
                 </Link>
               </li>
+              {/* Interview Settings/Practice link */}
               <li className="nav-item">
                 <Link className="nav-link" to="/interview-settings">
                   Interview Practice
@@ -69,6 +72,7 @@ function App() {
           </div>
         </nav>
 
+        {/* Routes to switch between different pages based on the URL path */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/interview-settings" element={<InterviewSettings />} />
@@ -80,6 +84,7 @@ function App() {
         </Routes>
       </div>
 
+      {/* Footer section at the bottom of the page */}
       <footer
         className="text-center text-white mt-auto"
         style={{ backgroundColor: "#67a9d2" }}
@@ -133,6 +138,7 @@ function App() {
             </a>
           </section>
         </div>
+        {/* Copyright information */}
         <div
           className="text-center p-3"
           style={{
