@@ -8,7 +8,6 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
   const [answer, setAnswer] = useState("");
   const [timerText, setTimerText] = useState(timeLimit);
   const [isTyping, setIsTyping] = useState(false);
-  const [initialCountdownStarted, setInitialCountdownStarted] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false); // New state to track if the answer is submitted
   const recordingTimer = useRef(null);
 
@@ -35,7 +34,7 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
     setTimerText(count > 0 ? count : "Time's Up");
 
     if (count <= 0) {
-      freezeTextInput();
+      submitAnswer();
     }
   };
 
@@ -45,38 +44,33 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
     setRemainingTime(timeLimit);
     setTimerText(timeLimit);
     setIsTyping(true);
+    setIsSubmitted(false); // Reset submission state
   };
 
-  // Start the initial countdown automatically on mount
+  // Automatically start the countdown when the component mounts
   useEffect(() => {
-    if (!initialCountdownStarted) {
-      setIsCountdownActive(true);
-      setInitialCountdownStarted(true); // Ensure this only happens once
-      setTimeout(() => {
-        startAnswering();
-      }, 3000); // 3-second countdown
-    }
-  }, [initialCountdownStarted]);
+    setIsCountdownActive(true); // Start countdown on mount
+    setTimeout(() => {
+      setIsCountdownActive(false);
+      setIsTyping(true);
+    }, 3000); // 3-second countdown
+  }, []);
 
-  // Handle freezing the input and submission
-  const freezeTextInput = () => {
-    setIsTyping(false); // Disable typing
+  const submitAnswer = () => {
+    setIsTyping(false); // Disable typing after submission
     setIsSubmitted(true); // Mark as submitted
+    onSubmit(answer, timeLimit - remainingTime);
   };
 
-  // Reset the answer field and restart the countdown
   const resetAnswer = () => {
     setAnswer("");
     setTimerText(timeLimit);
     setIsTyping(false);
-    setIsSubmitted(false); // Allow typing again
-    setIsCountdownActive(true); // Trigger the countdown again
-    setTimeout(() => {
-      startAnswering();
-    }, 3000); // 3-second countdown before starting
+    setIsSubmitted(false); // Reset submission state
+    startAnswering();
   };
 
-  // Renderer for the initial countdown
+  // Renderer for the countdown
   function countdownTimer({ seconds, completed }) {
     if (completed) {
       return <span>Start Answering!</span>;
@@ -104,27 +98,21 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
             rows="10"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
-            disabled={remainingTime <= 0 || isSubmitted} // Disable after submission
+            disabled={!isTyping || remainingTime <= 0 || isCountdownActive || isSubmitted} // Disable textarea after submission or time is up
             placeholder="Start typing your answer here..."
           />
         )}
       </div>
 
       <div className="button-container mt-4">
-        {!isCountdownActive && remainingTime > 0 && (
+        {!isCountdownActive && (
           <>
-            <button
-              onClick={freezeTextInput}
-              className="btn btn-success me-2"
-              disabled={isSubmitted} // Disable the button after submission
-            >
-              Submit Answer
-            </button>
-            <button
-              onClick={resetAnswer}
-              className="btn btn-primary me-2"
-              disabled={isCountdownActive}
-            >
+            {!isSubmitted && remainingTime > 0 && (
+              <button onClick={submitAnswer} className="btn btn-success me-2">
+                Submit Answer
+              </button>
+            )}
+            <button onClick={resetAnswer} className="btn btn-primary me-2">
               Start New Answer
             </button>
             <button onClick={goToSummary} className="btn btn-success">
