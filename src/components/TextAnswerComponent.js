@@ -3,12 +3,14 @@ import Countdown from "react-countdown";
 
 const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
   const [color, setTimerTextColor] = useState("black");
-  const [isCountdownActive, setIsCountdownActive] = useState(true); // Start countdown on mount
+  // Start countdown on mount
+  const [isCountdownActive, setIsCountdownActive] = useState(true); 
   const [remainingTime, setRemainingTime] = useState(timeLimit);
   const [answer, setAnswer] = useState("");
   const [timerText, setTimerText] = useState(timeLimit);
   const [isTyping, setIsTyping] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false); // New state to track if the answer is submitted
+  // New state to track if the answer is submitted
+  const [isSubmitted, setIsSubmitted] = useState(false); 
   const recordingTimer = useRef(null);
 
   // Timer for typing (main answer timer)
@@ -44,21 +46,26 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
     setRemainingTime(timeLimit);
     setTimerText(timeLimit);
     setIsTyping(true);
-    setIsSubmitted(false); // Reset submission state
+    // Reset submission state
+    setIsSubmitted(false); 
   };
 
   // Automatically start the countdown when the component mounts
   useEffect(() => {
-    setIsCountdownActive(true); // Start countdown on mount
+    // Start countdown on mount
+    setIsCountdownActive(true); 
     setTimeout(() => {
       setIsCountdownActive(false);
       setIsTyping(true);
-    }, 3000); // 3-second countdown
+       // 3-second countdown
+    }, 3000);
   }, []);
 
   const submitAnswer = () => {
-    setIsTyping(false); // Disable typing after submission
-    setIsSubmitted(true); // Mark as submitted
+    // Disable typing after submission
+    setIsTyping(false); 
+     // Mark as submitted
+    setIsSubmitted(true);
     onSubmit(answer, timeLimit - remainingTime);
   };
 
@@ -66,7 +73,8 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
     setAnswer("");
     setTimerText(timeLimit);
     setIsTyping(false);
-    setIsSubmitted(false); // Reset submission state
+     // Reset submission state
+    setIsSubmitted(false);
     startAnswering();
   };
 

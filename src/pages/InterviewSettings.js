@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../InterviewSettings.css"; // Import the CSS file
+import "../InterviewSettings.css";
 
 function InterviewSettings() {
-  const [numQuestions, setNumQuestions] = useState(3); // Default number of questions
-  const [questionType, setQuestionType] = useState("Behavioural"); // Default question type
-  const [readingTime, setReadingTime] = useState(40); // Default reading time in seconds
-  const [answerTime, setAnswerTime] = useState(120); // Default answer time in seconds
-  const [answerType, setAnswerType] = useState("Text"); // Default answer type
-
+  // Default number of questions
+  const [numQuestions, setNumQuestions] = useState(3); 
+  // Default question type
+  const [questionType, setQuestionType] = useState("Behavioural"); 
+  const [readingTime, setReadingTime] = useState(40); 
+  // Default answer time in seconds
+  const [answerTime, setAnswerTime] = useState(120); 
+  // Default answer type
+  const [answerType, setAnswerType] = useState("Text"); 
   const questionTypes = ["Technical", "Behavioural"];
   const answerTypes = ["Text", "Voice", "Video"];
 
   const handleArrowClick = (setter, value, delta) => {
-    setter(Math.max(1, value + delta)); // Ensure values don't go below 1
+    // Ensure values don't go below 1
+    setter(Math.max(1, value + delta)); 
   };
 
   const handleTypeChange = (currentType, types, setter, delta) => {

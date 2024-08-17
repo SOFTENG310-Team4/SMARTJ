@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import QuestionComponent from "../components/QuestionComponent";
 import VideoRecordingComponent from "../components/VideoRecordingComponent";
-import TextAnswerComponent from "../components/TextAnswerComponent"; // Import the TextAnswerComponent
+import TextAnswerComponent from "../components/TextAnswerComponent"; 
 import "../InterviewPractice.css";
 
 function InterviewPractice() {
@@ -12,19 +12,23 @@ function InterviewPractice() {
   // Extract query parameters
   const queryParams = new URLSearchParams(location.search);
   const questionType = queryParams.get("questionType") || "Behavioural";
-  const answerType = queryParams.get("answerType") || "Text"; // Get the answerType (Text/Video)
-  const timeLimit = parseInt(queryParams.get("answerTime"), 10) || 120; // Get answer time
+  // Get the answerType (Text/Video)
+  const answerType = queryParams.get("answerType") || "Text"; 
+  // Get answer time
+  const timeLimit = parseInt(queryParams.get("answerTime"), 10) || 120; 
 
   const [recordedChunks, setRecordedChunks] = useState([]);
-  const [textAnswer, setTextAnswer] = useState(""); // New state to hold the text answer
-  const [textAnswerDuration, setTextAnswerDuration] = useState(0); // State to hold duration
+  // New state to hold the text answer
+  const [textAnswer, setTextAnswer] = useState(""); 
+  // State to hold duration
+  const [textAnswerDuration, setTextAnswerDuration] = useState(0); 
 
   // Navigate to the summary page
   function goToSummary() {
     const duration = answerType === "Text" ? textAnswerDuration : timeLimit - recordedChunks.length;
     navigate("/summary", {
       state: {
-        answer: textAnswer, // For text answer
+        answer: textAnswer, 
         duration: duration,
         date: new Date().toLocaleDateString(),
         question: "Tell me about a challenging project you've worked on.",
@@ -34,8 +38,10 @@ function InterviewPractice() {
 
   // Handle submission for text answers
   const handleTextSubmit = (answer, duration) => {
-    setTextAnswer(answer); // Store the submitted answer in state
-    setTextAnswerDuration(duration); // Store the duration in state
+    // Store the submitted answer in state
+    setTextAnswer(answer); 
+    // Store the duration in state
+    setTextAnswerDuration(duration); 
     // No navigation here; just store the answer and freeze the text input.
   };
 
@@ -53,7 +59,8 @@ function InterviewPractice() {
         <TextAnswerComponent
           timeLimit={timeLimit}
           onSubmit={handleTextSubmit}
-          goToSummary={goToSummary} // Pass goToSummary to the component for the "Next" button
+          // Pass goToSummary to the component for the "Next" button
+          goToSummary={goToSummary} 
         />
       ) : (
         <VideoRecordingComponent
