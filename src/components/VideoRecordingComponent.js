@@ -1,24 +1,75 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Countdown from "react-countdown";
 
-const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
+const VideoRecordingComponent = ({
+  timeLimit,
+  setRecordedChunks,
+  recordedChunks,
+  goToSummary,
+}) => {
   const [color, setTimerTextColor] = useState("black");
-  const [isCountdownActive, setIsCountdownActive] = useState(true); // Start countdown on mount
+  const [isRecording, setIsRecording] = useState(false);
+  const [isReplay, setIsReplay] = useState(false);
+  const [isCountdownActive, setIsCountdownActive] = useState(false);
+  const [videoURL, setVideoURL] = useState(null);
   const [remainingTime, setRemainingTime] = useState(timeLimit);
-  const [answer, setAnswer] = useState("");
+  const [areCameraAndMicAvailable, setAreCameraAndMicAvailable] =
+    useState(false);
   const [timerText, setTimerText] = useState(timeLimit);
-  const [isTyping, setIsTyping] = useState(false);
-  const [initialCountdownStarted, setInitialCountdownStarted] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false); // New state to track if the answer is submitted
+
+  const mediaRecorderRef = useRef(null);
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
   const recordingTimer = useRef(null);
 
-  // Timer for typing (main answer timer)
   useEffect(() => {
-    if (isTyping) {
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        streamRef.current = stream;
+        videoRef.current.srcObject = stream;
+        setAreCameraAndMicAvailable(true);
+      })
+      .catch((error) => {
+        alert(
+          "Your webcam and microphone must be accessible to continue.\nReload the application once they are both accessible and ensure they remain accessible while recording."
+        );
+        console.error("Error accessing webcam or microphone", error);
+        setAreCameraAndMicAvailable(false);
+      });
+
+    return () => {
+      if (streamRef.current) {
+        const tracks = streamRef.current.getTracks();
+        tracks.forEach((track) => track.stop());
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isRecording) {
       recordingTimer.current = setInterval(() => {
         setRemainingTime((prevTime) => {
           const newTime = prevTime - 1;
           updateTimer(newTime);
+
+          try {
+            navigator.mediaDevices
+              .getUserMedia({ video: true, audio: true })
+              .then(() => {
+                console.log("Microphone and camera are accessible.");
+              })
+              .catch((error) => {
+                console.error("Microphone or camera not accessible:", error);
+                alert(
+                  "Recording failed.\nPlease ensure both the microphone and camera are working and reload the application."
+                );
+                clearInterval(recordingTimer.current);
+                stopRecording();
+                setAreCameraAndMicAvailable(false);
+              });
+          } catch {}
+
           return newTime;
         });
       }, 1000);
@@ -27,59 +78,74 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
     }
 
     return () => clearInterval(recordingTimer.current);
-  }, [isTyping]);
+  }, [isRecording]);
 
-  // Update the timer text and color
   const updateTimer = (count) => {
     setTimerTextColor(count < 11 ? "red" : "black");
     setTimerText(count > 0 ? count : "Time's Up");
 
     if (count <= 0) {
-      freezeTextInput();
+      setTimeout(() => {
+        stopRecording();
+      }, 100);
     }
   };
 
-  // Automatically start typing after the initial countdown
-  const startAnswering = () => {
-    setIsCountdownActive(false);
+  function startRecording() {
+    setIsReplay(false);
+    setIsCountdownActive(true);
     setRemainingTime(timeLimit);
     setTimerText(timeLimit);
-    setIsTyping(true);
-  };
 
-  // Start the initial countdown automatically on mount
-  useEffect(() => {
-    if (!initialCountdownStarted) {
-      setIsCountdownActive(true);
-      setInitialCountdownStarted(true); // Ensure this only happens once
-      setTimeout(() => {
-        startAnswering();
-      }, 3000); // 3-second countdown
-    }
-  }, [initialCountdownStarted]);
-
-  // Handle freezing the input and submission
-  const freezeTextInput = () => {
-    setIsTyping(false); // Disable typing
-    setIsSubmitted(true); // Mark as submitted
-  };
-
-  // Reset the answer field and restart the countdown
-  const resetAnswer = () => {
-    setAnswer("");
-    setTimerText(timeLimit);
-    setIsTyping(false);
-    setIsSubmitted(false); // Allow typing again
-    setIsCountdownActive(true); // Trigger the countdown again
     setTimeout(() => {
-      startAnswering();
-    }, 3000); // 3-second countdown before starting
-  };
+      setIsRecording(true);
+      setRecordedChunks([]);
 
-  // Renderer for the initial countdown
+      try {
+        navigator.mediaDevices
+          .getUserMedia({ video: true, audio: true })
+          .then((stream) => {
+            mediaRecorderRef.current = new MediaRecorder(stream);
+            mediaRecorderRef.current.ondataavailable = handleDataAvailable;
+            mediaRecorderRef.current.start();
+          })
+          .catch((error) => {
+            alert(`Failed to access microphone or webcam.`);
+          });
+
+        setIsCountdownActive(false);
+      } catch (error) {
+        alert(
+          "Failed to start recording.\nCould not access either the microphone, webcam or both.\nPlease ensure both are working and accessible, then reload the application."
+        );
+        setIsRecording(false);
+        setIsCountdownActive(false);
+      }
+    }, 3000);
+  }
+
+  function stopRecording() {
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+  }
+
+  function handleDataAvailable(event) {
+    if (event.data.size > 0) {
+      setRecordedChunks((prev) => [...prev, event.data]);
+    }
+  }
+
+  function replayRecording() {
+    const blob = new Blob(recordedChunks, { type: "video/webm" });
+    setVideoURL(URL.createObjectURL(blob));
+    setIsReplay(true);
+  }
+
   function countdownTimer({ seconds, completed }) {
     if (completed) {
-      return <span>Start Answering!</span>;
+      return <span>Go!</span>;
     } else {
       return <span>{seconds}</span>;
     }
@@ -88,53 +154,64 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
   return (
     <div>
       <div className="timer-text">
-        <h2 style={{ color }}>{timerText}</h2>
+        <h2 style={{ color, display: isReplay ? "none" : "inline" }}>
+          {timerText}
+        </h2>
       </div>
 
-      <div className="text-input-container">
+      <div className="video-container">
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          style={{ display: isReplay ? "none" : "inline" }}
+        />
         {isCountdownActive && (
           <div className="overlay-text">
             <Countdown date={Date.now() + 3000} renderer={countdownTimer} />
           </div>
         )}
-
-        {!isCountdownActive && (
-          <textarea
-            className="form-control"
-            rows="10"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value)}
-            disabled={remainingTime <= 0 || isSubmitted} // Disable after submission
-            placeholder="Start typing your answer here..."
-          />
+        {videoURL && isReplay && (
+          <video src={videoURL} controls />
         )}
       </div>
 
-      <div className="button-container mt-4">
-        {!isCountdownActive && remainingTime > 0 && (
-          <>
-            <button
-              onClick={freezeTextInput}
-              className="btn btn-success me-2"
-              disabled={isSubmitted} // Disable the button after submission
-            >
-              Submit Answer
-            </button>
-            <button
-              onClick={resetAnswer}
-              className="btn btn-primary me-2"
-              disabled={isCountdownActive}
-            >
-              Start New Answer
-            </button>
-            <button onClick={goToSummary} className="btn btn-success">
-              Next
-            </button>
-          </>
+      <div className="button-container">
+        {!isRecording && !isCountdownActive && areCameraAndMicAvailable && (
+          <button onClick={startRecording} className="btn btn-primary">
+            Start New Recording
+          </button>
         )}
+
+        <button
+          onClick={stopRecording}
+          style={{
+            display: isRecording && !isCountdownActive ? "inline" : "none",
+          }}
+          className="btn btn-primary"
+        >
+          Stop Recording
+        </button>
+
+        {recordedChunks.length > 0 &&
+          !isRecording &&
+          !isReplay &&
+          !isCountdownActive && (
+            <>
+              <button
+                onClick={replayRecording}
+                className="btn btn-primary me-2"
+              >
+                Replay Recording
+              </button>
+              <button onClick={goToSummary} className="btn btn-success">
+                Next
+              </button>
+            </>
+          )}
       </div>
     </div>
   );
 };
 
-export default TextAnswerComponent;
+export default VideoRecordingComponent;
