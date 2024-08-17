@@ -3,27 +3,26 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Link,
   useNavigate,
 } from "react-router-dom";
 import "../InterviewSettings.css"; // Import the CSS file
 import TextAnswerPage from "./TextAnswerPage";
-
 import InterviewPractice from "./InterviewPractice";
 
 function InterviewSettings() {
   const [numQuestions, setNumQuestions] = useState(3); // Default number of questions
-  const [questionType, setQuestionType] = useState("Experiences"); // Default question type
+  const [questionType, setQuestionType] = useState("Behavioural"); // Default question type
   const [readingTime, setReadingTime] = useState(40); // Default reading time in seconds
   const [answerTime, setAnswerTime] = useState(120); // Default answer time in seconds
   const [answerType, setAnswerType] = useState("Text"); // Default answer type
 
-  const questionTypes = ["Technical", "Experiences"];
-  const answerTypes = ["Text", "Voice", "Video"];
   const navigate = useNavigate();
 
+  const questionTypes = ["Technical", "Behavioural"];
+  const answerTypes = ["Text", "Voice", "Video"];
+
   const handleArrowClick = (setter, value, delta) => {
-    setter(value + delta);
+    setter(Math.max(1, value + delta)); // Ensure values don't go below 1
   };
 
   const handleTypeChange = (currentType, types, setter, delta) => {
@@ -31,13 +30,22 @@ function InterviewSettings() {
     const nextIndex = (currentIndex + delta + types.length) % types.length;
     setter(types[nextIndex]);
   };
+
   const startInterview = () => {
     if (answerType === "Text") {
       navigate("/text-answer", {
         state: { timeLimit: answerTime },
       });
     } else {
-      navigate("/interview-practice");
+      navigate("/interview-practice", {
+        state: {
+          questionType,
+          numQuestions,
+          readingTime,
+          answerTime,
+          answerType,
+        },
+      });
     }
   };
 
@@ -46,6 +54,7 @@ function InterviewSettings() {
       <h1 className="display-4">Interview Settings</h1>
 
       <div className="settings mt-4">
+        {/* Number of Questions */}
         <div className="setting">
           <h4>Number of Questions: {numQuestions}</h4>
           <button
@@ -61,6 +70,7 @@ function InterviewSettings() {
           </button>
         </div>
 
+        {/* Question Type */}
         <div className="setting">
           <h4>Question Type: {questionType}</h4>
           <button
@@ -79,36 +89,37 @@ function InterviewSettings() {
           </button>
         </div>
 
+        {/* Reading Time */}
         <div className="setting">
           <h4>Reading Time: {readingTime} seconds</h4>
           <button
-            onClick={() => handleArrowClick(setReadingTime, readingTime, -5)}
-            disabled={readingTime <= 5}
+            onClick={() => handleArrowClick(setReadingTime, readingTime, -10)}
           >
             &lt;
           </button>
           <button
-            onClick={() => handleArrowClick(setReadingTime, readingTime, 5)}
+            onClick={() => handleArrowClick(setReadingTime, readingTime, 10)}
           >
             &gt;
           </button>
         </div>
 
+        {/* Answer Time */}
         <div className="setting">
           <h4>Answer Time: {answerTime} seconds</h4>
           <button
-            onClick={() => handleArrowClick(setAnswerTime, answerTime, -5)}
-            disabled={answerTime <= 5}
+            onClick={() => handleArrowClick(setAnswerTime, answerTime, -10)}
           >
             &lt;
           </button>
           <button
-            onClick={() => handleArrowClick(setAnswerTime, answerTime, 5)}
+            onClick={() => handleArrowClick(setAnswerTime, answerTime, 10)}
           >
             &gt;
           </button>
         </div>
 
+        {/* Answer Type */}
         <div className="setting">
           <h4>Answer Type: {answerType}</h4>
           <button
