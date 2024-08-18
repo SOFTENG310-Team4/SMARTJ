@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Countdown from "react-countdown";
 
-const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
+const TextAnswerComponent = ({numQuestions, readingTime ,timeLimit, onSubmit, goToSummary }) => {
   const [color, setTimerTextColor] = useState("black");
   // Start countdown on mount
   const [isCountdownActive, setIsCountdownActive] = useState(true); 
@@ -57,14 +57,14 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
     setTimeout(() => {
       setIsCountdownActive(false);
       setIsTyping(true);
-       // 3-second countdown
-    }, 3000);
-  }, []);
+      // Wait for the reading time duration
+    }, readingTime * 1000);  // reading time in milliseconds
+  }, [readingTime]);
 
   const submitAnswer = () => {
     // Disable typing after submission
     setIsTyping(false); 
-     // Mark as submitted
+    // Mark as submitted
     setIsSubmitted(true);
     onSubmit(answer, timeLimit - remainingTime);
   };
@@ -73,19 +73,24 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
     setAnswer("");
     setTimerText(timeLimit);
     setIsTyping(false);
-     // Reset submission state
+    // Reset submission state
     setIsSubmitted(false);
     startAnswering();
   };
 
   // Renderer for the countdown
-  function countdownTimer({ seconds, completed }) {
+  const countdownTimer = ({ minutes, seconds, completed }) => {
     if (completed) {
       return <span>Start Answering!</span>;
     } else {
-      return <span>{seconds}</span>;
+      // Display minutes and seconds properly
+      return (
+        <span>
+          {minutes > 0 ? `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}` : seconds}
+        </span>
+      );
     }
-  }
+  };
 
   return (
     <div>
@@ -96,7 +101,7 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
       <div className="text-input-container">
         {isCountdownActive && (
           <div className="overlay-text">
-            <Countdown date={Date.now() + 3000} renderer={countdownTimer} />
+            <Countdown date={Date.now() + readingTime * 1000} renderer={countdownTimer} />
           </div>
         )}
 
@@ -121,7 +126,7 @@ const TextAnswerComponent = ({ timeLimit, onSubmit, goToSummary }) => {
               </button>
             )}
             <button onClick={resetAnswer} className="btn btn-primary me-2">
-              Start New Answer
+              Next Question
             </button>
             <button onClick={goToSummary} className="btn btn-success">
               Next

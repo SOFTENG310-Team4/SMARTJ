@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import Countdown from "react-countdown";
 
 const VideoRecordingComponent = ({
+  numQuestions,
+  readingTime,
   timeLimit,
   setRecordedChunks,
   recordedChunks,
@@ -143,13 +145,19 @@ const VideoRecordingComponent = ({
     setIsReplay(true);
   }
 
-  function countdownTimer({ seconds, completed }) {
+  // Renderer for the countdown
+  const countdownTimer = ({ minutes, seconds, completed }) => {
     if (completed) {
-      return <span>Go!</span>;
+      return <span>Start Answering!</span>;
     } else {
-      return <span>{seconds}</span>;
+      // Display minutes and seconds properly
+      return (
+        <span>
+          {minutes > 0 ? `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}` : seconds}
+        </span>
+      );
     }
-  }
+  };
 
   return (
     <div>
@@ -168,7 +176,7 @@ const VideoRecordingComponent = ({
         />
         {isCountdownActive && (
           <div className="overlay-text">
-            <Countdown date={Date.now() + 3000} renderer={countdownTimer} />
+            <Countdown date={Date.now() + readingTime * 1000} renderer={countdownTimer} />
           </div>
         )}
         {videoURL && isReplay && (
@@ -179,7 +187,7 @@ const VideoRecordingComponent = ({
       <div className="button-container">
         {!isRecording && !isCountdownActive && areCameraAndMicAvailable && (
           <button onClick={startRecording} className="btn btn-primary">
-            Start New Recording
+            Next Question
           </button>
         )}
 

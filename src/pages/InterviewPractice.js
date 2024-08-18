@@ -15,7 +15,9 @@ function InterviewPractice() {
   // Get the answerType (Text/Video)
   const answerType = queryParams.get("answerType") || "Text"; 
   // Get answer time
+  const numQuestions = parseInt(queryParams.get("numQuestions"), 10) || 3;
   const timeLimit = parseInt(queryParams.get("answerTime"), 10) || 120; 
+  const readingTime = parseInt(queryParams.get("readingTime"), 10) || 40;
 
   const [recordedChunks, setRecordedChunks] = useState([]);
   // New state to hold the text answer
@@ -57,6 +59,8 @@ function InterviewPractice() {
       {/* Conditionally render the TextAnswerComponent or VideoRecordingComponent */}
       {answerType === "Text" ? (
         <TextAnswerComponent
+          numQuestions={numQuestions}
+          readingTime={readingTime}
           timeLimit={timeLimit}
           onSubmit={handleTextSubmit}
           // Pass goToSummary to the component for the "Next" button
@@ -64,6 +68,8 @@ function InterviewPractice() {
         />
       ) : (
         <VideoRecordingComponent
+          numQuestions={numQuestions}
+          readingTime={readingTime}
           timeLimit={timeLimit}
           setRecordedChunks={setRecordedChunks}
           recordedChunks={recordedChunks}
