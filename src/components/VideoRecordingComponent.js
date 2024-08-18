@@ -15,6 +15,7 @@ const VideoRecordingComponent = ({
   const [isCountdownActive, setIsCountdownActive] = useState(false);
   const [videoURL, setVideoURL] = useState(null);
   const [remainingTime, setRemainingTime] = useState(timeLimit);
+  const countdownStartTime = useRef(Date.now() + readingTime * 1000);
   const [areCameraAndMicAvailable, setAreCameraAndMicAvailable] =
     useState(false);
   const [timerText, setTimerText] = useState(timeLimit);
@@ -82,6 +83,18 @@ const VideoRecordingComponent = ({
     return () => clearInterval(recordingTimer.current);
   }, [isRecording]);
 
+    // Effect to handle readingTime countdown
+    useEffect(() => {
+      setIsCountdownActive(true);
+      const readingTimer = setTimeout(() => {
+        setIsCountdownActive(false);
+        startRecording(); 
+      }, 0);
+  
+      return () => clearTimeout(readingTimer);
+    }, [readingTime]);
+
+    
   const updateTimer = (count) => {
     setTimerTextColor(count < 11 ? "red" : "black");
     setTimerText(count > 0 ? count : "Time's Up");
@@ -123,7 +136,7 @@ const VideoRecordingComponent = ({
         setIsRecording(false);
         setIsCountdownActive(false);
       }
-    }, 3000);
+    }, readingTime * 1000);
   }
 
   function stopRecording() {

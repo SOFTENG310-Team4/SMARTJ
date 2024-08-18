@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import Countdown from "react-countdown";
 
-const TextAnswerComponent = ({numQuestions, readingTime ,timeLimit, onSubmit, goToSummary }) => {
+const TextAnswerComponent = ({ numQuestions, readingTime, timeLimit, onSubmit, goToSummary }) => {
   const [color, setTimerTextColor] = useState("black");
-  // Start countdown on mount
-  const [isCountdownActive, setIsCountdownActive] = useState(true); 
+  const [isCountdownActive, setIsCountdownActive] = useState(true);
   const [remainingTime, setRemainingTime] = useState(timeLimit);
   const [answer, setAnswer] = useState("");
   const [timerText, setTimerText] = useState(timeLimit);
   const [isTyping, setIsTyping] = useState(false);
-  // New state to track if the answer is submitted
-  const [isSubmitted, setIsSubmitted] = useState(false); 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  
+  const countdownStartTime = useRef(Date.now() + readingTime * 1000);
+  const timeLimitStartTime = useRef(null);
   const recordingTimer = useRef(null);
 
   // Timer for typing (main answer timer)
@@ -40,31 +41,30 @@ const TextAnswerComponent = ({numQuestions, readingTime ,timeLimit, onSubmit, go
     }
   };
 
-  // Automatically start typing after the initial countdown
+  // Automatically start the time limit timer after reading time
   const startAnswering = () => {
     setIsCountdownActive(false);
+    timeLimitStartTime.current = Date.now() + timeLimit * 1000;
     setRemainingTime(timeLimit);
     setTimerText(timeLimit);
     setIsTyping(true);
-    // Reset submission state
-    setIsSubmitted(false); 
+    setIsSubmitted(false);
   };
 
   // Automatically start the countdown when the component mounts
   useEffect(() => {
-    // Start countdown on mount
-    setIsCountdownActive(true); 
-    setTimeout(() => {
+    setIsCountdownActive(true);
+    countdownStartTime.current = Date.now() + readingTime * 1000;
+    const readingTimer = setTimeout(() => {
       setIsCountdownActive(false);
-      setIsTyping(true);
-      // Wait for the reading time duration
-    }, readingTime * 1000);  // reading time in milliseconds
+      startAnswering(); 
+    }, readingTime * 1000);
+
+    return () => clearTimeout(readingTimer);
   }, [readingTime]);
 
   const submitAnswer = () => {
-    // Disable typing after submission
-    setIsTyping(false); 
-    // Mark as submitted
+    setIsTyping(false);
     setIsSubmitted(true);
     onSubmit(answer, timeLimit - remainingTime);
   };
@@ -72,18 +72,24 @@ const TextAnswerComponent = ({numQuestions, readingTime ,timeLimit, onSubmit, go
   const resetAnswer = () => {
     setAnswer("");
     setTimerText(timeLimit);
+    setRemainingTime(timeLimit);
     setIsTyping(false);
-    // Reset submission state
     setIsSubmitted(false);
-    startAnswering();
+    setIsCountdownActive(true);
+
+    countdownStartTime.current = Date.now() + readingTime * 1000;
+    const readingTimer = setTimeout(() => {
+      setIsCountdownActive(false);
+      startAnswering();
+    }, readingTime * 1000);
+
+    return () => clearTimeout(readingTimer);
   };
 
-  // Renderer for the countdown
   const countdownTimer = ({ minutes, seconds, completed }) => {
     if (completed) {
       return <span>Start Answering!</span>;
     } else {
-      // Display minutes and seconds properly
       return (
         <span>
           {minutes > 0 ? `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}` : seconds}
@@ -101,7 +107,7 @@ const TextAnswerComponent = ({numQuestions, readingTime ,timeLimit, onSubmit, go
       <div className="text-input-container">
         {isCountdownActive && (
           <div className="overlay-text">
-            <Countdown date={Date.now() + readingTime * 1000} renderer={countdownTimer} />
+            <Countdown date={countdownStartTime.current} renderer={countdownTimer} />
           </div>
         )}
 
@@ -111,7 +117,7 @@ const TextAnswerComponent = ({numQuestions, readingTime ,timeLimit, onSubmit, go
             rows="10"
             value={answer}
             onChange={(e) => setAnswer(e.target.value)}
-            disabled={!isTyping || remainingTime <= 0 || isCountdownActive || isSubmitted} // Disable textarea after submission or time is up
+            disabled={!isTyping || remainingTime <= 0 || isCountdownActive || isSubmitted}
             placeholder="Start typing your answer here..."
           />
         )}
