@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import Countdown from "react-countdown";
 
 const VideoRecordingComponent = ({
-  numQuestions,
   readingTime,
   timeLimit,
   setRecordedChunks,
@@ -198,12 +197,6 @@ const VideoRecordingComponent = ({
       </div>
 
       <div className="button-container">
-        {!isRecording && !isCountdownActive && areCameraAndMicAvailable && (
-          <button onClick={startRecording} className="btn btn-primary">
-            Next Question
-          </button>
-        )}
-
         <button
           onClick={stopRecording}
           style={{
@@ -224,9 +217,6 @@ const VideoRecordingComponent = ({
                 className="btn btn-primary me-2"
               >
                 Replay Recording
-              </button>
-              <button onClick={goToSummary} className="btn btn-success">
-                Next
               </button>
             </>
           )}

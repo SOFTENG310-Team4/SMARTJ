@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Countdown from "react-countdown";
 
-const TextAnswerComponent = ({ numQuestions, readingTime, timeLimit, onSubmit, goToSummary }) => {
+const TextAnswerComponent = ({ readingTime, timeLimit, onSubmit, goToSummary }) => {
   const [color, setTimerTextColor] = useState("black");
   const [isCountdownActive, setIsCountdownActive] = useState(true);
   const [remainingTime, setRemainingTime] = useState(timeLimit);
@@ -131,12 +131,6 @@ const TextAnswerComponent = ({ numQuestions, readingTime, timeLimit, onSubmit, g
                 Submit Answer
               </button>
             )}
-            <button onClick={resetAnswer} className="btn btn-primary me-2">
-              Next Question
-            </button>
-            <button onClick={goToSummary} className="btn btn-success">
-              Next
-            </button>
           </>
         )}
       </div>
