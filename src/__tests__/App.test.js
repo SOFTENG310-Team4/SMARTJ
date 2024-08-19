@@ -7,7 +7,6 @@ import App from '../App';
 describe('App component', () => {
   test('renders without crashing', () => {
     render(<App />);
-    expect(true).toBe(true);
   });
 
 //Testing if dummy test runs
