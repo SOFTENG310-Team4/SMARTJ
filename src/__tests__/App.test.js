@@ -9,10 +9,6 @@ describe("App component", () => {
     render(<App />);
   });
 
-  test("renders without crashing", () => {
-    // Test is simplified as the component is already rendered in beforeEach
-  });
-
   test("navbar brand link is present and correct", () => {
     const brandLinks = screen.getAllByText(/SMARTJ/i);
     expect(brandLinks.length).toBeGreaterThan(0);
