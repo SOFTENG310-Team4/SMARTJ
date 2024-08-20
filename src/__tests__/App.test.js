@@ -9,7 +9,7 @@ describe("App component", () => {
     render(<App />);
   });
 
-  test("navbar brand link is present and correct", () => {
+  test("SMARTJ brand name is present and correct", () => {
     const brandLinks = screen.getAllByText(/SMARTJ/i);
     expect(brandLinks.length).toBeGreaterThan(0);
 
