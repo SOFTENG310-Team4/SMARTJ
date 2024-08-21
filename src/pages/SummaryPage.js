@@ -1,27 +1,37 @@
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const SummaryPage = () => {
+  // Hook to access the current location object, which contains state from the previous page
   const location = useLocation();
+
+  // Hook to programmatically navigate to different routes
   const navigate = useNavigate();
-  //Summary page uses stored state from the previous page to display the interview data
+
+  // Retrieve interview data from location state or use default values if none is provided
   const interviewData = location.state || {
     question: "No question available",
     duration: 0,
-    date: new Date().toLocaleDateString()
+    date: new Date().toLocaleDateString(),
   };
 
+  // Navigate to the interview practice page
   const startNewInterview = () => {
+
     navigate('/interview-settings');
+
   };
 
+  // Navigate to the home page
   const goHome = () => {
-    navigate('/');
+    navigate("/");
   };
 
   return (
     <div className="container mt-5">
+      {/* Main title for the summary page */}
       <h1 className="display-4 text-center mb-5">Interview Summary</h1>
+
       <div className="d-flex flex-column justify-content-center align-items-center">
         <img
           src="images/thumbsup.png"
@@ -42,6 +52,8 @@ const SummaryPage = () => {
             Go Home
           </button>
         </div>
+
+  
       </div>
     </div>
   );
