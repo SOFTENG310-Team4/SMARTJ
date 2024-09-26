@@ -1,12 +1,42 @@
 import React, { useState } from "react";
+import { registerUser } from "../services/UserService";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({ name: "", email: "", password: "" });
+  const navigate = useNavigate();
+
+  const validate = () => {
+    let valid = true;
+    let errors = { name: "", email: "", password: "" };
+
+    if (!name) {
+      errors.name = "Invalid name";
+      valid = false;
+    }
+    if (!email) {
+      errors.email = "Invalid email";
+      valid = false;
+    }
+    if (!password) {
+      errors.password = "Invalid password";
+      valid = false;
+    }
+
+    setErrors(errors);
+    return valid;
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    await registerUser({ email, password });
+    if (validate()) {
+      await registerUser({ name, email, password });
+      // Redirect to the login page
+      navigate("/login");
+    }
   };
 
   return (
@@ -15,16 +45,30 @@ function Register() {
 
       <form onSubmit={handleRegister}>
         <div className="mb-3">
+          <label htmlFor="name" className="form-label">
+            Name
+          </label>
+          <input
+            type="text"
+            className={`form-control ${errors.name ? "is-invalid" : ""}`}
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          {errors.name && <div className="invalid-name">{errors.name}</div>}
+        </div>
+        <div className="mb-3">
           <label htmlFor="email" className="form-label">
             Email address
           </label>
           <input
             type="email"
-            className="form-control"
+            className={`form-control ${errors.email ? "is-invalid" : ""}`}
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          {errors.email && <div className="invalid-email">{errors.email}</div>}
         </div>
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
@@ -32,11 +76,14 @@ function Register() {
           </label>
           <input
             type="password"
-            className="form-control"
+            className={`form-control ${errors.password ? "is-invalid" : ""}`}
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {errors.password && (
+            <div className="invalid-password">{errors.password}</div>
+          )}
         </div>
         <button type="submit" className="btn btn-primary">
           Register
