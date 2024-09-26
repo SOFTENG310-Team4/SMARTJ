@@ -18,6 +18,15 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+
+  React.useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   return (
     <Router>
       <div className="d-flex flex-column min-vh-100">
@@ -66,16 +75,21 @@ function App() {
                   Contact Us
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/my-profile">
-                  My Profile
-                </Link>
-              </li>
+              {isAuthenticated ? (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to="/my-profile">
+                      My Profile
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/login">
+                    Login
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
         </nav>

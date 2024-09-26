@@ -32,6 +32,7 @@ function Login() {
       await loginUser({ email, password });
       if (localStorage.getItem("token")) {
         navigate("/my-profile");
+        window.location.reload();
       }
     }
   };

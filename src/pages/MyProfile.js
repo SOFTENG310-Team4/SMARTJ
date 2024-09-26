@@ -9,6 +9,7 @@ function MyProfile() {
   const handleLogout = () => {
     logout();
     navigate("/login");
+    window.location.reload();
   };
 
   useEffect(() => {
