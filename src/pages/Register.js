@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { registerUser } from "../services/UserService";
+import { registerUser } from "../services/ProfileService";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
