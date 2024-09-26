@@ -5,12 +5,16 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    general: "",
+  });
   const navigate = useNavigate();
 
   const validate = () => {
     let valid = true;
-    let errors = { email: "", password: "" };
+    let errors = { email: "", password: "", general: "" };
 
     if (!email) {
       errors.email = "Invalid email";
@@ -29,10 +33,17 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     if (validate()) {
-      await loginUser({ email, password });
-      if (localStorage.getItem("token")) {
-        navigate("/my-profile");
-        window.location.reload();
+      try {
+        await loginUser({ email, password });
+        if (localStorage.getItem("token")) {
+          navigate("/my-profile");
+          window.location.reload();
+        }
+      } catch (error) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          general: "Login failed. Please check your email and password.",
+        }));
       }
     }
   };
@@ -76,6 +87,11 @@ function Login() {
             <div className="invalid-feedback">{errors.password}</div>
           )}
         </div>
+        {errors.general && (
+          <div className="alert alert-danger" role="alert">
+            {errors.general}
+          </div>
+        )}
         <button type="submit" className="btn btn-primary">
           Login
         </button>

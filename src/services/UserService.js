@@ -18,7 +18,13 @@ export const loginUser = async (userDetails) => {
     },
     body: JSON.stringify(userDetails),
   });
+
   const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Login failed");
+  }
+
   localStorage.setItem("token", data.token);
   return data;
 };

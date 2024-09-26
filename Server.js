@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   profile: {
     name: String,
-    progress: Array,
-    analytics: Object,
+    progress: { type: Array, default: [] },
+    analytics: { type: Object, default: {} },
   },
 });
 
@@ -81,6 +81,7 @@ app.get("/api/profile", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     console.log(user.profile);
+    console.log(user.profile.analytics);
     res.json(user.profile); // Use res.json
   } catch (error) {
     console.error(error);
