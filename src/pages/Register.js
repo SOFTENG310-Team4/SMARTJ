@@ -33,7 +33,7 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     if (validate()) {
-      await registerUser({ name, email, password });
+      await registerUser({ email, password, name });
       // Redirect to the login page
       navigate("/login");
     }

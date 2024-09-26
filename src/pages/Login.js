@@ -30,7 +30,9 @@ function Login() {
     e.preventDefault();
     if (validate()) {
       await loginUser({ email, password });
-      navigate("/my-profile");
+      if (localStorage.getItem("token")) {
+        navigate("/my-profile");
+      }
     }
   };
 

@@ -18,7 +18,9 @@ export const loginUser = async (userDetails) => {
     },
     body: JSON.stringify(userDetails),
   });
-  return response.json();
+  const data = await response.json();
+  localStorage.setItem("token", data.token);
+  return data;
 };
 
 export const getProfile = async () => {
@@ -42,4 +44,8 @@ export const updateProfile = async (profile) => {
     body: JSON.stringify({ profile }),
   });
   return response.json();
+};
+
+export const logout = () => {
+  localStorage.removeItem("token");
 };

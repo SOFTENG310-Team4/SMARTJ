@@ -29,11 +29,15 @@ const User = mongoose.model("User", userSchema);
 
 // Register Endpoint
 app.post("/api/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  const { email, password, name } = req.body;
 
   try {
     const hashedPassword = await bcrrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword });
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+      profile: { name, progress: [], analytics: {} },
+    });
     await newUser.save();
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {
@@ -46,38 +50,64 @@ app.post("/api/register", async (req, res) => {
 
 // Login Endpoint
 app.post("/api/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).lean();
+    const user = await User.findOne({ email }).lean();
+    console.log(user);
 
-  if (!user) {
-    return res.status(400).json({ message: "Invalid email or password" });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    if (await bcrrypt.compare(password, user.password)) {
+      const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET);
+
+      console.log(token);
+      return res.status(200).json({ token });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "An error occurred while logging in" });
   }
-
-  if (await bcrrypt.compare(password, user.password)) {
-    const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET);
-
-    return res.status(200).json({ token });
-  }
-
-  res.status(400).send("Invalid email or password");
 });
 
 app.get("/api/profile", async (req, res) => {
-  const token = req.headers.authorization.split(" ")[1];
-  const decoded = jwt.verify(token, JWT_SECRET);
-  const user = await User.findById(decoded.userId);
-  res.send.json(user.profile);
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    console.log(user.profile);
+    res.json(user.profile); // Use res.json
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while retrieving the profile" });
+  }
 });
 
 // Update Profile Endpoint
 app.put("/api/profile", async (req, res) => {
-  const token = req.headers.authorization.split(" ")[1];
-  const decoded = jwt.verify(token, JWT_SECRET);
-  const user = await User.findById(decoded.userId);
-  user.profile = req.body.profile;
-  await user.save();
-  res.send.json(user.profile);
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.id); // Correctly use decoded.id
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.profile = req.body.profile;
+    await user.save();
+    res.json(user.profile); // Use res.json
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while updating the profile" });
+  }
 });
 
 app.listen(PORT, () => {
