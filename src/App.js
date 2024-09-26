@@ -14,6 +14,8 @@ import InterviewPractice from "./pages/InterviewPractice";
 import InterviewSettings from "./pages/InterviewSettings";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import SummaryPage from "./pages/SummaryPage";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 function App() {
   return (
@@ -65,6 +67,16 @@ function App() {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link className="nav-link" to="/register">
+                  Register
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/login">
+                  Login
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link className="nav-link" to="/my-profile">
                   My Profile
                 </Link>
@@ -78,6 +90,8 @@ function App() {
           <Routes>
             {/* Define routes and their corresponding components */}
             <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/interview-settings" element={<InterviewSettings />} />
             <Route path="/interview-practice" element={<InterviewPractice />} />
             <Route path="/job-finder" element={<JobFinder />} />
