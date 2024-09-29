@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { getProfile, logout, updateProfile } from "../services/ProfileService";
+import {
+  getProfile,
+  logout,
+  updateProfile,
+  uploadProfilePicture,
+} from "../services/ProfileService";
 import { useNavigate } from "react-router-dom";
+import { Buffer } from "buffer";
 
 function MyProfile() {
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [profilePicture, setProfilePicture] = useState(null);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -18,8 +25,15 @@ function MyProfile() {
   };
 
   const handleSave = async () => {
+    if (profilePicture) {
+      await uploadProfilePicture(profilePicture);
+    }
     await updateProfile(profile);
     setIsEditing(false);
+  };
+
+  const handleFileChange = (e) => {
+    setProfilePicture(e.target.files[0]);
   };
 
   useEffect(() => {
@@ -35,13 +49,18 @@ function MyProfile() {
     return <div>Loading...</div>;
   }
 
+  const profilePictureSrc = profile.profilePicture.data
+    ? `data:${profile.profilePicture.contentType};base64,${Buffer.from(
+        profile.profilePicture.data
+      ).toString("base64")}`
+    : "";
+
   return (
     <div className="container text-center mt-5">
-      {/* Main title of the profile page */}
       <h1 className="display-4">Welcome! {profile.name} </h1>
       <p className="lead">View and edit your profile details.</p>
 
-      {isEditing ? ( // If the user is editing the profile details
+      {isEditing ? (
         <div>
           <form>
             <input
@@ -49,13 +68,7 @@ function MyProfile() {
               value={profile.name}
               onChange={(e) => setProfile({ ...profile, name: e.target.value })}
             />
-            <input
-              type="text"
-              value={profile.profilePicture}
-              onChange={(e) =>
-                setProfile({ ...profile, profilePicture: e.target.value })
-              }
-            />
+            <input type="file" onChange={handleFileChange} />
           </form>
           <button className="btn btn-primary" onClick={handleSave}>
             Save
@@ -64,8 +77,8 @@ function MyProfile() {
       ) : (
         <div>
           <img
-            src={profile.profilePicture}
-            class="profile-picture"
+            src={profilePictureSrc}
+            className="profile-picture"
             alt="Profile"
           />
           <button className="btn btn-primary" onClick={handleEdit}>
@@ -73,9 +86,6 @@ function MyProfile() {
           </button>
         </div>
       )}
-
-      {/* Placeholder for profile management content */}
-      {/* You can add components or sections here for users to view and update their profile information */}
 
       <button className="btn btn-primary" onClick={handleLogout}>
         Logout

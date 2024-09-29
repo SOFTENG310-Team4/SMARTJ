@@ -1,8 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const bcrrypt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+const multer = require("multer");
+const fs = require("fs");
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 const app = express();
 app.use(express.json());
@@ -20,7 +24,10 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   profile: {
     name: String,
-    profilePicture: String,
+    profilePicture: {
+      data: Buffer,
+      contentType: String,
+    },
     progress: { type: Array, default: [] },
     analytics: { type: Object, default: {} },
   },
@@ -31,19 +38,22 @@ const User = mongoose.model("User", userSchema);
 // Register Endpoint
 app.post("/api/register", async (req, res) => {
   const { email, password, name } = req.body;
-  const defaultProfilePicture = "images/blank-profile-picture.png";
+  const defaultProfilePicturePath = "public/images/blank-profile-picture.png";
+  const defaultProfilePicture = {
+    data: fs.readFileSync(defaultProfilePicturePath),
+    contentType: "image/png",
+  };
 
-  console.log(defaultProfilePicture);
   try {
-    const hashedPassword = await bcrrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({
       email,
       password: hashedPassword,
       profile: {
         name,
+        profilePicture: defaultProfilePicture,
         progress: [],
         analytics: {},
-        profilePicture: defaultProfilePicture,
       },
     });
     await newUser.save();
@@ -55,6 +65,33 @@ app.post("/api/register", async (req, res) => {
       .json({ message: "An error occurred while registering the user" });
   }
 });
+
+// Upload Profile Picture Endpoint
+app.post(
+  "/api/uploadProfilePicture",
+  upload.single("profilePicture"),
+  async (req, res) => {
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      const decoded = jwt.verify(token, JWT_SECRET);
+      const user = await User.findById(decoded.id);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      user.profile.profilePicture = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
+      await user.save();
+      res.json(user.profile);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: "An error occurred while uploading the profile picture",
+      });
+    }
+  }
+);
 
 // Login Endpoint
 app.post("/api/login", async (req, res) => {
@@ -68,7 +105,7 @@ app.post("/api/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    if (await bcrrypt.compare(password, user.password)) {
+    if (await bcrypt.compare(password, user.password)) {
       const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET);
 
       console.log(token);
