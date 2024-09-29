@@ -37,6 +37,13 @@
   margin: 0 auto;
 }
 
+.profile-picture-nav {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

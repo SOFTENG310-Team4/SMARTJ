@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -16,16 +16,25 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import SummaryPage from "./pages/SummaryPage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import { getProfile } from "./services/ProfileService"; // Import getProfile
+import { Buffer } from "buffer";
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [profile, setProfile] = useState(null); // Add profile state
 
-  React.useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsAuthenticated(true);
+      fetchProfile(); // Fetch profile data if authenticated
     }
   }, []);
+
+  const fetchProfile = async () => {
+    const profileData = await getProfile();
+    setProfile(profileData);
+  };
 
   return (
     <Router>
@@ -79,7 +88,19 @@ function App() {
                 <>
                   <li className="nav-item">
                     <Link className="nav-link" to="/my-profile">
-                      My Profile
+                      {profile && profile.profilePicture.data ? (
+                        <img
+                          src={`data:${
+                            profile.profilePicture.contentType
+                          };base64,${Buffer.from(
+                            profile.profilePicture.data
+                          ).toString("base64")}`}
+                          alt="Profile"
+                          className="profile-picture-nav"
+                        />
+                      ) : (
+                        "My Profile"
+                      )}
                     </Link>
                   </li>
                 </>
