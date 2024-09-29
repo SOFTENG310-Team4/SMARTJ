@@ -25,11 +25,10 @@ function MyProfile() {
   };
 
   const handleSave = async () => {
-    if (profilePicture) {
-      await uploadProfilePicture(profilePicture);
-    }
-    await updateProfile(profile);
+    console.log("Saving profile...");
+    await updateProfile(profile, profilePicture);
     setIsEditing(false);
+    window.location.reload();
   };
 
   const handleFileChange = (e) => {
@@ -53,7 +52,7 @@ function MyProfile() {
     ? `data:${profile.profilePicture.contentType};base64,${Buffer.from(
         profile.profilePicture.data
       ).toString("base64")}`
-    : "";
+    : "images\blank-profile-picture.png";
 
   return (
     <div className="container text-center mt-5">

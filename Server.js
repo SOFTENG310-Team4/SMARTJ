@@ -9,7 +9,7 @@ const fs = require("fs");
 const upload = multer({ storage: multer.memoryStorage() });
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
 const PORT = process.env.PORT || 5000;
@@ -66,33 +66,6 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// Upload Profile Picture Endpoint
-app.post(
-  "/api/uploadProfilePicture",
-  upload.single("profilePicture"),
-  async (req, res) => {
-    try {
-      const token = req.headers.authorization.split(" ")[1];
-      const decoded = jwt.verify(token, JWT_SECRET);
-      const user = await User.findById(decoded.id);
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      user.profile.profilePicture = {
-        data: req.file.buffer,
-        contentType: req.file.mimetype,
-      };
-      await user.save();
-      res.json(user.profile);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({
-        message: "An error occurred while uploading the profile picture",
-      });
-    }
-  }
-);
-
 // Login Endpoint
 app.post("/api/login", async (req, res) => {
   try {
@@ -137,18 +110,28 @@ app.get("/api/profile", async (req, res) => {
 });
 
 // Update Profile Endpoint
-app.put("/api/profile", async (req, res) => {
+app.put("/api/profile", upload.single("profilePicture"), async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token, JWT_SECRET);
-    const user = await User.findById(decoded.id); // Correctly use decoded.id
+    const user = await User.findById(decoded.id);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    user.profile = req.body.profile;
-    user.profile.profilePicture = req.body.profile.profilePicture;
+
+    user.profile = req.body.profile
+      ? JSON.parse(req.body.profile)
+      : user.profile;
+
+    if (req.file) {
+      user.profile.profilePicture = {
+        data: req.file.buffer,
+        contentType: req.file.mimetype,
+      };
+    }
+
     await user.save();
-    res.json(user.profile); // Use res.json
+    res.json(user.profile);
   } catch (error) {
     console.error(error);
     res

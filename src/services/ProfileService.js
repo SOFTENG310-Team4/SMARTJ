@@ -40,34 +40,22 @@ export const getProfile = async () => {
   return response.json();
 };
 
-export const updateProfile = async (profile) => {
+export const updateProfile = async (profile, file) => {
   const token = localStorage.getItem("token");
+  const formData = new FormData();
+  formData.append("profile", JSON.stringify(profile));
+
+  if (file) {
+    formData.append("profilePicture", file);
+  }
+
   const response = await fetch("http://localhost:5000/api/profile", {
     method: "PUT",
     headers: {
-      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ profile }),
+    body: formData,
   });
-  return response.json();
-};
-
-export const uploadProfilePicture = async (file) => {
-  const token = localStorage.getItem("token");
-  const formData = new FormData();
-  formData.append("profilePicture", file);
-
-  const response = await fetch(
-    "http://localhost:5000/api/uploadProfilePicture",
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    }
-  );
 
   return response.json();
 };
