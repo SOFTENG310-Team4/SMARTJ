@@ -23,7 +23,7 @@ describe("App component", () => {
       "Interview Practice",
       "Job Finder",
       "Contact Us",
-      "My Profile",
+      "Login",
     ];
 
     navLinks.forEach((linkText) => {
