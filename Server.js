@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   profile: {
     name: String,
+    profilePicture: String,
     progress: { type: Array, default: [] },
     analytics: { type: Object, default: {} },
   },
@@ -30,13 +31,20 @@ const User = mongoose.model("User", userSchema);
 // Register Endpoint
 app.post("/api/register", async (req, res) => {
   const { email, password, name } = req.body;
+  const defaultProfilePicture = "images/blank-profile-picture.png";
 
+  console.log(defaultProfilePicture);
   try {
     const hashedPassword = await bcrrypt.hash(password, 10);
     const newUser = new User({
       email,
       password: hashedPassword,
-      profile: { name, progress: [], analytics: {} },
+      profile: {
+        name,
+        progress: [],
+        analytics: {},
+        profilePicture: defaultProfilePicture,
+      },
     });
     await newUser.save();
     res.status(201).json({ message: "User created successfully" });
@@ -101,6 +109,7 @@ app.put("/api/profile", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
     user.profile = req.body.profile;
+    user.profile.profilePicture = req.body.profile.profilePicture;
     await user.save();
     res.json(user.profile); // Use res.json
   } catch (error) {
