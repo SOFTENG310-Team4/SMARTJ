@@ -6,7 +6,10 @@ const cors = require("cors");
 const multer = require("multer");
 const fs = require("fs");
 
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fieldSize: 25 * 1024 * 1024 },
+});
 
 const app = express();
 app.use(express.json({ limit: "50mb" }));
@@ -133,6 +136,14 @@ app.put("/api/profile", upload.single("profilePicture"), async (req, res) => {
     await user.save();
     res.json(user.profile);
   } catch (error) {
+    if (error instanceof multer.MulterError) {
+      // Handle Multer-specific errors
+      if (error.code === "LIMIT_FILE_SIZE") {
+        return res
+          .status(400)
+          .json({ message: "File size too large. Max limit is 5MB." });
+      }
+    }
     console.error(error);
     res
       .status(500)
