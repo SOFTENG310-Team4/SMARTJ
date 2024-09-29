@@ -31,8 +31,25 @@ const userSchema = new mongoose.Schema({
       data: Buffer,
       contentType: String,
     },
-    progress: { type: Array, default: [] },
-    analytics: { type: Object, default: {} },
+    // Analytics will contain an array with session objects, within the session objects will be the session id, date, and median score for a user. it will also contain the questions answered by the user and the answers given by the user.
+    analytics: {
+      type: Array,
+      default: {
+        sessions: [
+          {
+            id: { type: String },
+            date: { type: Date },
+            medianScore: { type: Number },
+            questions: [
+              {
+                question: { type: String },
+                answer: { type: String },
+              },
+            ],
+          },
+        ],
+      },
+    },
   },
 });
 

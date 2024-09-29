@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  getProfile,
-  logout,
-  updateProfile,
-  uploadProfilePicture,
-} from "../services/ProfileService";
+import { getProfile, logout, updateProfile } from "../services/ProfileService";
 import { useNavigate } from "react-router-dom";
 import { Buffer } from "buffer";
+import PerformanceChart from "../components/PerformanceChartComponent";
 
 function MyProfile() {
   const [profile, setProfile] = useState(null);
@@ -52,7 +48,11 @@ function MyProfile() {
     ? `data:${profile.profilePicture.contentType};base64,${Buffer.from(
         profile.profilePicture.data
       ).toString("base64")}`
-    : "images\blank-profile-picture.png";
+    : "images/blank-profile-picture.png";
+
+  const handleSessionClick = (session) => {
+    navigate(`/session/${session.id}`, { state: { session } });
+  };
 
   return (
     <div className="container text-center mt-5">
@@ -108,6 +108,32 @@ function MyProfile() {
       <button className="btn btn-primary mt-3" onClick={handleLogout}>
         Logout
       </button>
+
+      <PerformanceChart sessions={profile.analytics.sessions} />
+
+      <div className="mt-5">
+        <h3>Sessions</h3>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Median Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {profile.analytics.sessions &&
+              profile.analytics.sessions.map((session) => (
+                <tr
+                  key={session.id}
+                  onClick={() => handleSessionClick(session)}
+                >
+                  <td>{new Date(session.date).toLocaleDateString()}</td>
+                  <td>{session.medianScore}</td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
