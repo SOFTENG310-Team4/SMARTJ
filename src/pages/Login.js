@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { loginUser } from "../services/ProfileService";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +11,13 @@ function Login() {
     general: "",
   });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/my-profile");
+    }
+  }, [navigate]);
 
   const validate = () => {
     let valid = true;
