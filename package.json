@@ -15,6 +15,7 @@
     "buffer": "^6.0.3",
     "chai": "^5.1.1",
     "chart.js": "^4.4.4",
+    "concurrently": "^9.0.1",
     "cors": "^2.8.5",
     "express": "^4.21.0",
     "install": "^0.13.0",
@@ -35,7 +36,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "concurrently \"npm run start-react\" \"npm run start-server\"",
+    "start-react": "react-scripts start",
+    "start-server": "node Server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
