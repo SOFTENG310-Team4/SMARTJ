@@ -58,7 +58,6 @@ function MyProfile() {
     <div className="container text-center mt-5">
       <h1 className="display-4">Welcome! {profile.name} </h1>
       <p className="lead">View and edit your profile details.</p>
-
       {isEditing ? (
         <div>
           <form>
@@ -99,41 +98,42 @@ function MyProfile() {
             className="profile-picture"
             alt="Profile"
           />
-          <button className="btn btn-primary mt-3" onClick={handleEdit}>
-            Edit
-          </button>
+          <div className="button-group mt-3">
+            <button className="btn btn-primary" onClick={handleEdit}>
+              Edit
+            </button>
+            <button className="btn btn-danger" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
+
+          <PerformanceChart sessions={profile.analytics.sessions} />
+
+          <div className="mt-5">
+            <h3>Sessions</h3>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Median Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {profile.analytics.sessions &&
+                  profile.analytics.sessions.map((session) => (
+                    <tr
+                      key={session.id}
+                      onClick={() => handleSessionClick(session)}
+                    >
+                      <td>{new Date(session.date).toLocaleDateString()}</td>
+                      <td>{session.medianScore}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
-
-      <button className="btn btn-primary mt-3" onClick={handleLogout}>
-        Logout
-      </button>
-
-      <PerformanceChart sessions={profile.analytics.sessions} />
-
-      <div className="mt-5">
-        <h3>Sessions</h3>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Median Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {profile.analytics.sessions &&
-              profile.analytics.sessions.map((session) => (
-                <tr
-                  key={session.id}
-                  onClick={() => handleSessionClick(session)}
-                >
-                  <td>{new Date(session.date).toLocaleDateString()}</td>
-                  <td>{session.medianScore}</td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 }
