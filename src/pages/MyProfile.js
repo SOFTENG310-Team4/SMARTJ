@@ -62,14 +62,33 @@ function MyProfile() {
       {isEditing ? (
         <div>
           <form>
-            <input
-              type="text"
-              value={profile.name}
-              onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-            />
-            <input type="file" onChange={handleFileChange} />
+            <div className="form-group">
+              <label htmlFor="name" className="form-label">
+                <h3>Name</h3>
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="name"
+                value={profile.name}
+                onChange={(e) =>
+                  setProfile({ ...profile, name: e.target.value })
+                }
+              />
+            </div>
+            <div className="form-group mt-3">
+              <label htmlFor="profilePicture" className="form-label">
+                <h3>Profile Picture</h3>
+              </label>
+              <input
+                type="file"
+                className="form-control"
+                id="profilePicture"
+                onChange={handleFileChange}
+              />
+            </div>
           </form>
-          <button className="btn btn-primary" onClick={handleSave}>
+          <button className="btn btn-primary mt-3" onClick={handleSave}>
             Save
           </button>
         </div>
@@ -80,13 +99,13 @@ function MyProfile() {
             className="profile-picture"
             alt="Profile"
           />
-          <button className="btn btn-primary" onClick={handleEdit}>
+          <button className="btn btn-primary mt-3" onClick={handleEdit}>
             Edit
           </button>
         </div>
       )}
 
-      <button className="btn btn-primary" onClick={handleLogout}>
+      <button className="btn btn-primary mt-3" onClick={handleLogout}>
         Logout
       </button>
     </div>
