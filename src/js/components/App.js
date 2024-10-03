@@ -133,8 +133,7 @@ function App() {
 
         {/* Footer component for site-wide information */}
         <footer
-          className="text-center text-white mt-auto"
-          style={{ backgroundColor: "#67a9d2" }}
+          className="text-center text-white mt-auto footer"
         >
           <div className="container p-4 pb-0">
             <section className="mb-4">
@@ -185,11 +184,7 @@ function App() {
           </div>
 
           <div
-            className="text-center p-3"
-            style={{
-              backgroundColor: "#c7e2fd",
-              color: "black",
-            }}
+            className="text-center p-3 copyright-section"
           >
             {/* Footer copyright information */}© 2024 Copyright:
             <a

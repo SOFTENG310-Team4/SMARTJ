@@ -74,3 +74,14 @@
     padding: 10px 0;
   }
 }
+
+/* FOOTER */
+.footer {
+  background-color: #67a9d2;
+}
+
+.copyright-section {
+  color: black;
+  background-color: #c7e2fd;
+  
+}
