@@ -28,6 +28,7 @@ SMARTJ is built using a modern web development stack. Here are the key technolog
 - React.js - A JavaScript library for building user interfaces
 - Node.js - JavaScript runtime built on Chrome's V8 JavaScript engine
 - npm - Package manager for JavaScript
+- MongoDB - Database for keeping track of users.
 
 ### Frontend
 
@@ -47,6 +48,7 @@ SMARTJ is built using a modern web development stack. Here are the key technolog
   Note: Node.js installation cincludes npm installation
 - [Npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (Node Package Manager) for installing packages from npm registry<br />
   Downloading Node.js should automatically install npm for you
+- [MongoDB](https://www.mongodb.com/try/download/community) For running a database that will keep track of user data <br/> Recommended version: v8.0.0 <br/>
 
 ### Installation
 
@@ -54,8 +56,10 @@ SMARTJ is built using a modern web development stack. Here are the key technolog
 2. Navigate to root directory of the Repository
 3. Create a .env file and add a OpenAI API key (should be in the format REACT_APP_OPENAI_API_KEY=*your key*)
 4. Run `npm install` to install the necessary dependencies
-5. Run `npm start` to run the web application
-6. After running npm start, open your browser and navigate to `http://localhost:3000`
+5. Start the MongoDB server, whether through client or `mongod` via command line
+6. Run `node server.js` to start the backend server
+7. Start a new terminal and run `npm start` to run the web application
+8. After running npm start, open your browser and navigate to `http://localhost:3000`
 
 ### Running Tests
 
