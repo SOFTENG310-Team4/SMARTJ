@@ -64,11 +64,8 @@ function InterviewPractice() {
 
   // Function to handle the finish action
   const finishInterview = () => {
-    setQuestions((prevQuestions) => {
-      const updatedQuestions = [...prevQuestions, currentQuestion]; // Ensure the final question is added
-      goToSummary(updatedQuestions); // Pass the updated questions to goToSummary
-      return updatedQuestions; // Update the state with the new questions list
-    });
+    const updatedQuestions = [...questions, currentQuestion];
+    goToSummary(updatedQuestions);
   };
   
   return (

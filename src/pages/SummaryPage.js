@@ -48,7 +48,7 @@ const SummaryPage = () => {
           messages: [
             { 
               role: "user", 
-              content: "Give feedback and a letter grade to the user about these answers: " + interviewData.answers + ", to these job interview questions respectively: " + interviewData.questions + ". If the user doesn't input any answers give F letter grade." 
+              content: "Give feedback and a number grade out of 10 to the user about these answers: " + interviewData.answers + ", to these job interview questions respectively: " + interviewData.questions + ". If the user doesn't input any answers give a 0 number grade." 
             }
           ],
           temperature: 0.7,

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from 'prop-types';
 
 // Fetch questions from the specified endpoint based on question type
 const fetchQuestions = async (type) => {
@@ -44,6 +45,12 @@ const QuestionComponent = ({ questionType, onQuestionFetched }) => {
       </div>
     </div>
   );
+};
+
+// Define propTypes to validate props
+QuestionComponent.propTypes = {
+  questionType: PropTypes.string.isRequired,   // questionType must be a string and is required
+  onQuestionFetched: PropTypes.func.isRequired // onQuestionFetched must be a function and is required
 };
 
 export default QuestionComponent;
