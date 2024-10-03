@@ -9,7 +9,7 @@ const fetchQuestions = async (type) => {
   return questions;
 };
 
-const QuestionComponent = ({ questionType }) => {
+const QuestionComponent = ({ questionType, onQuestionFetched }) => {
   // State to hold the current question
   const [question, setQuestion] = useState("");
 
@@ -23,13 +23,15 @@ const QuestionComponent = ({ questionType }) => {
         // Select a random question from the list
         const randomIndex = Math.floor(Math.random() * questions.length);
         // Update the state with the selected question
-        setQuestion(questions[randomIndex].question);
+        const selectedQuestion = questions[randomIndex].question;
+        setQuestion(selectedQuestion);
+        onQuestionFetched(selectedQuestion); // Pass the question to the parent
       }
     };
 
     // Call the function to get a random question
     getRandomQuestion();
-  }, [questionType]); // Re-run the effect if the questionType changes
+  }, [questionType, onQuestionFetched]); // Re-run the effect if the questionType changes
 
   return (
     <div className="question-container">

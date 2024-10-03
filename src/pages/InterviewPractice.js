@@ -20,40 +20,57 @@ function InterviewPractice() {
 
   // State to manage recorded video chunks and text answers
   const [recordedChunks, setRecordedChunks] = useState([]);
-  const [textAnswer, setTextAnswer] = useState("");
+  const [textAnswers, setTextAnswers] = useState([]); // Array for text answers
+  const [questions, setQuestions] = useState([]); // Array for questions
   const [textAnswerDuration, setTextAnswerDuration] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState(""); // State for the current question
 
   // Function to navigate to the summary page with collected data
-  function goToSummary() {
+  function goToSummary(updatedQuestions) {
     const duration =
       answerType === "Text"
         ? textAnswerDuration
         : timeLimit - recordedChunks.length;
-    navigate("/summary", {
-      state: {
-        answer: textAnswer,
-        duration: duration,
-        date: new Date().toLocaleDateString(),
-        question: "Tell me about a challenging project you've worked on.",
-      },
-    });
+
+   // Concatenate answers and questions
+   const concatenatedAnswers = textAnswers.join("\n");
+   const concatenatedQuestions = updatedQuestions.join("\n");
+
+   navigate("/summary", {
+     state: {
+       questions: concatenatedQuestions,
+       answers: concatenatedAnswers,
+       duration: duration,
+       date: new Date().toLocaleDateString(),
+     },
+   });
   }
 
   // Handler for submitting text answers
   const handleTextSubmit = (answer, duration) => {
-    setTextAnswer(answer);
+    setTextAnswers((prevAnswers) => [...prevAnswers, answer]); // Append new answer
     setTextAnswerDuration(duration);
   };
 
-  // Increment question count and handle navigation to summary
+  // Increment question count, store current question, and handle navigation to summary
   const increment = () => {
+    setQuestions((prevQuestions) => [...prevQuestions, currentQuestion]); // Store the current question
     if (count < numQuestions - 1) {
       setCount(count + 1);
     } else {
-      goToSummary();
+      finishInterview();
     }
   };
 
+  // Function to handle the finish action
+  const finishInterview = () => {
+    setQuestions((prevQuestions) => {
+      const updatedQuestions = [...prevQuestions, currentQuestion]; // Ensure the final question is added
+      goToSummary(updatedQuestions); // Pass the updated questions to goToSummary
+      return updatedQuestions; // Update the state with the new questions list
+    });
+  };
+  
   return (
     <div className="container text-center mt-5">
       <div className="row justify-content-center">
@@ -68,10 +85,11 @@ function InterviewPractice() {
           }}
         >
           <div className="question-section text-center">
-            {/* Display the current question based on the type */}
+            {/* Display the current question */}
             <QuestionComponent
               key={`${questionType}-${count}`} // Unique key to force re-render
               questionType={questionType}
+              onQuestionFetched={setCurrentQuestion} // Pass the function to set the current question
             />
           </div>
           <div className="button-container mt-4">
@@ -91,7 +109,7 @@ function InterviewPractice() {
                 style={{
                   border: "2px solid black", // Border for button
                 }}
-                onClick={goToSummary}
+                onClick={finishInterview}
                 className="btn btn-success"
               >
                 Finish
