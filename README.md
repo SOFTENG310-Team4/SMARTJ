@@ -28,6 +28,7 @@ SMARTJ is built using a modern web development stack. Here are the key technolog
 - React.js - A JavaScript library for building user interfaces
 - Node.js - JavaScript runtime built on Chrome's V8 JavaScript engine
 - npm - Package manager for JavaScript
+- MongoDB - Database for keeping track of users.
 
 ### Frontend
 
@@ -47,14 +48,17 @@ SMARTJ is built using a modern web development stack. Here are the key technolog
   Note: Node.js installation cincludes npm installation
 - [Npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (Node Package Manager) for installing packages from npm registry<br />
   Downloading Node.js should automatically install npm for you
+- [MongoDB](https://www.mongodb.com/try/download/community) For running a database that will keep track of user data <br/> Recommended version: v8.0.0 <br/>
 
 ### Installation
 
 1. Clone the repo: `git clone https://github.com/SOFTENG310-Team4/SMARTJ.git`
 2. Navigate to root directory of the Repository
 3. Run `npm install` to install the necessary dependencies
-4. Run `npm start` to run the web application
-5. After running npm start, open your browser and navigate to `http://localhost:3000`
+4. Start the MongoDB server, whether through client or `mongod` via command line
+5. Run `node server.js` to start the backend server
+6. Start a new terminal and run `npm start` to run the web application
+7. After running npm start, open your browser and navigate to `http://localhost:3000`
 
 ### Running Tests
 
