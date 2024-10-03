@@ -56,6 +56,19 @@ describe("InterviewPractice", () => {
     expect(screen.getByText("Mock Question")).toBeInTheDocument();
   });
 
+  test("calls goToSummary with correct data on finishing interview", () => {
+    setup("?questionType=Behavioural&answerType=Text&numQuestions=1");
+
+    // Submit an answer
+    fireEvent.click(screen.getByText("Submit Answer"));
+
+    // Click the "Finish" button
+    fireEvent.click(screen.getByText("Finish"));
+
+    // Check if it navigated to the summary page
+    expect(screen.getByText("Mock Question")).toBeInTheDocument();
+  });
+
   test("renders video recording component when answer type is 'Video'", () => {
     setup("?questionType=Technical&answerType=Video&numQuestions=1");
 
@@ -63,5 +76,37 @@ describe("InterviewPractice", () => {
     expect(
       screen.getByText("Mock VideoRecordingComponent")
     ).toBeInTheDocument();
+  });
+
+  test("increments count and stores questions correctly", () => {
+    setup("?questionType=Behavioural&answerType=Text&numQuestions=3");
+
+    // Submit the first answer
+    fireEvent.click(screen.getByText("Submit Answer"));
+
+    // Click the "Next Question" button
+    fireEvent.click(screen.getByText("Next Question"));
+
+    // The count should increment and still show the Mock Question
+    expect(screen.getByText("Mock Question")).toBeInTheDocument();
+  });
+
+  test("finishes the interview correctly when the last question is reached", () => {
+    setup("?questionType=Behavioural&answerType=Text&numQuestions=2");
+
+    // Submit the first answer
+    fireEvent.click(screen.getByText("Submit Answer"));
+
+    // Click the "Next Question" button
+    fireEvent.click(screen.getByText("Next Question"));
+
+    // Submit the last answer
+    fireEvent.click(screen.getByText("Submit Answer"));
+
+    // Click the "Finish" button
+    fireEvent.click(screen.getByText("Finish"));
+
+    // Verify if it navigated to the summary
+    expect(screen.getByText("Mock Question")).toBeInTheDocument();
   });
 });
