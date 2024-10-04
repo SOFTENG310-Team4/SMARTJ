@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import Countdown from "react-countdown";
+import "../../styles/components/AnswerComponent.css";
 
 const VideoRecordingComponent = ({
   readingTime,
@@ -163,18 +164,7 @@ const VideoRecordingComponent = ({
     } else {
       // Display minutes and seconds properly
       return (
-        <span
-          style={{
-            fontSize: "20px",
-            color: "red",
-            backgroundColor: "#555",
-            padding: "6px",
-            borderRadius: "8px",
-            display: "inline-block",
-            width: "40px",
-            textAlign: "center",
-          }}
-        >
+        <span className="countdown-timer">
           {minutes > 0
             ? `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`
             : seconds}
@@ -200,13 +190,7 @@ const VideoRecordingComponent = ({
                   setIsCountdownActive(false);
                   startRecording();
                 }}
-                className="btn btn-primary"
-                style={{
-                  backgroundColor: "#ffcccc", // Light red color
-                  borderColor: "black",
-                  color: "black",
-                }}
-              >
+                className="btn btn-primary start-answering-btn ">
                 Skip Reading Time
               </button>
             )}
@@ -247,7 +231,6 @@ const VideoRecordingComponent = ({
           !isCountdownActive && (
             <>
               <button
-                style={{ borderColor: "black" }}
                 onClick={replayRecording}
                 className="btn btn-primary me-2"
               >
