@@ -54,11 +54,12 @@ SMARTJ is built using a modern web development stack. Here are the key technolog
 
 1. Clone the repo: `git clone https://github.com/SOFTENG310-Team4/SMARTJ.git`
 2. Navigate to root directory of the Repository
-3. Run `npm install` to install the necessary dependencies
-4. Start the MongoDB server, whether through client or `mongod` via command line
-5. Run `node server.js` to start the backend server
-6. Start a new terminal and run `npm start` to run the web application
-7. After running npm start, open your browser and navigate to `http://localhost:3000`
+3. Create a .env file and add a OpenAI API key (should be in the format REACT_APP_OPENAI_API_KEY=*your key*)
+4. Run `npm install` to install the necessary dependencies
+5. Start the MongoDB server, whether through client or `mongod` via command line
+6. Run `node server.js` to start the backend server
+7. Start a new terminal and run `npm start` to run the web application
+8. After running npm start, open your browser and navigate to `http://localhost:3000`
 
 ### Running Tests
 
