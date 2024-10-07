@@ -90,6 +90,12 @@ function MyProfile() {
           <button className="btn btn-primary mt-3" onClick={handleSave}>
             Save
           </button>
+          <button
+            className="btn btn-danger mt-3"
+            onClick={() => setIsEditing(false)}
+          >
+            Cancel
+          </button>
         </div>
       ) : (
         <div>
