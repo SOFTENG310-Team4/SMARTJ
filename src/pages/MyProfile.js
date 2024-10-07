@@ -117,7 +117,7 @@ function MyProfile() {
 
           <div className="mt-5">
             <h3>Sessions</h3>
-            <table className="table">
+            <table className="table session-table">
               <thead>
                 <tr>
                   <th>Date</th>
@@ -126,15 +126,17 @@ function MyProfile() {
               </thead>
               <tbody>
                 {profile.analytics.sessions &&
-                  profile.analytics.sessions.map((session) => (
-                    <tr
-                      key={session.id}
-                      onClick={() => handleSessionClick(session)}
-                    >
-                      <td>{new Date(session.date).toLocaleDateString()}</td>
-                      <td>{session.medianScore}</td>
-                    </tr>
-                  ))}
+                  profile.analytics.sessions
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .map((session) => (
+                      <tr
+                        key={session.id}
+                        onClick={() => handleSessionClick(session)}
+                      >
+                        <td>{new Date(session.date).toLocaleString()}</td>
+                        <td>{session.medianScore}</td>
+                      </tr>
+                    ))}
               </tbody>
             </table>
           </div>
