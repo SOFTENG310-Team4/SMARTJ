@@ -155,23 +155,38 @@ const VideoRecordingComponent = ({
     setIsReplay(true);
   }
 
-  function saveRecording() {
-    // Create a blob URL for saving the recording
-    const blob = new Blob(recordedChunks, { type: "video/webm" });
-    const url = URL.createObjectURL(blob);
+  async function saveRecording() {
+    if (recordedChunks.length > 0) {
+      // Create a blob URL for saving the recording
+      const blob = new Blob(recordedChunks, { type: "video/webm" });
 
-    // Create a link element to download recording
-    const link = document.createElement('a');
-    link.href = url;
+      // Generate a default name for the recording using the date
+      const date = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const defaultName = `recording-${date}.webm`;
 
-    // Set a name for the recording using the current date
-    const date = new Date().toISOString().split('T')[0];
-    link.download = `recording-${date}.webm`;
+      try {
+        // Use the File System Access API to ask the user where they want the recording saved
+        const options = {
+          suggestedName: defaultName,
+          types: [{
+            description: 'WebM Video',
+            accept: {
+              'video/webm': ['.webm'],
+            },
+          }],
+        };
 
-    // Download recording on link click
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+        const fileHandle = await window.showSaveFilePicker(options);
+        const writableStream = await fileHandle.createWritable();
+
+        // Write the recording blob to the file
+        await writableStream.write(blob);
+        await writableStream.close();
+      } catch (error) {
+        console.error('Error saving file:', error);
+        alert('Recording failed to save. Please try again.');
+      }
+    }
   }
 
   // Renderer for the countdown
