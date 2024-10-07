@@ -69,12 +69,17 @@ const SummaryPage = () => {
             messages: [
               {
                 role: "user",
-                content:
-                  "Give feedback and a number grade out of 10 to the user about these answers: " +
-                  interviewData.answers +
-                  ", to these job interview questions respectively: " +
-                  interviewData.questions +
-                  ". If the user doesn't input any answers give a 0 number grade. Give only one grade for all the answers.",
+                content: `Give feedback and a number grade out of 10 to the user about these answers: ${answersArray
+                  .map((answer, index) => `Answer ${index + 1}: ${answer}`)
+                  .join(
+                    ", "
+                  )} to these job interview questions respectively: ${questionsArray
+                  .map(
+                    (question, index) => `Question ${index + 1}: ${question}`
+                  )
+                  .join(
+                    ", "
+                  )}. If the user doesn't input any answers give a 0 number grade. Give only one grade for all the answers.`,
               },
             ],
             temperature: 0.7,
