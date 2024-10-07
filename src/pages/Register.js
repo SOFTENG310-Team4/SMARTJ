@@ -35,7 +35,8 @@ function Register() {
     if (validate()) {
       var response;
       response = await registerUser({ email, password, name });
-      if (response.status === 201) {
+      console.log(response);
+      if (response.message === "User created successfully") {
         navigate("/login");
       } else {
         alert("Same email already in use");

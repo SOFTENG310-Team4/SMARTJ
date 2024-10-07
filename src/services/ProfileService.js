@@ -74,7 +74,7 @@ export const saveFeedback = async (feedback, interviewData) => {
         answers: interviewData.answers,
         feedback: feedback,
         duration: interviewData.duration,
-        date: interviewData.date,
+        date: new Date().toISOString(),
       }),
     });
 
