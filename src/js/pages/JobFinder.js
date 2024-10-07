@@ -1,17 +1,18 @@
 import React from "react";
+import "../../styles/pages/JobFinder.css";
 
 function JobFinder() {
   return (
     <div className="container text-center mt-5">
       {/* Main title of the page */}
-      <h1 className="display-4 font-weight-bold">Job Finder</h1>
+      <h1 className="jobfinder-header">Job Finder</h1>
 
       {/* Subtitle providing a brief description */}
-      <em className="lead d-block mb-5">
-        Curated links to tech internship listings for you!
+      <em className="jobfinder-subheading d-block">
+        Curated links to <span className="gradient-text">tech internship</span> listings for you!
       </em>
 
-      <div className="row justify-content-center">
+      <div className="row justify-content-center jobfinder-list">
         {/* Card for Prosple internships */}
         <div className="col-md-4 mb-4">
           <a
@@ -21,7 +22,7 @@ function JobFinder() {
           >
             <div className="card h-100 border border-dark d-flex justify-content-center">
               <img
-                src="images/prosple.png"
+                src="images/jobfinder/prosple.webp"
                 className="card-img-top p-3"
                 alt="Prosple"
               />
@@ -38,7 +39,7 @@ function JobFinder() {
           >
             <div className="card h-100 border border-dark d-flex justify-content-center">
               <img
-                src="images/summer_of_tech.png"
+                src="images/jobfinder/summer_of_tech.webp"
                 className="card-img-top p-3"
                 alt="Summer of Tech"
               />
@@ -55,7 +56,7 @@ function JobFinder() {
           >
             <div className="card h-100 border border-dark d-flex justify-content-center">
               <img
-                src="images/seek.png"
+                src="images/jobfinder/seek.webp"
                 className="card-img-top p-3"
                 alt="Seek"
               />
@@ -74,7 +75,7 @@ function JobFinder() {
           >
             <div className="card h-100 border border-dark d-flex justify-content-center">
               <img
-                src="images/indeed.png"
+                src="images/jobfinder/indeed.webp"
                 className="card-img-top p-3"
                 alt="Indeed"
               />
@@ -91,7 +92,7 @@ function JobFinder() {
           >
             <div className="card h-100 border border-dark d-flex justify-content-center">
               <img
-                src="images/glassdoor.png"
+                src="images/jobfinder/glassdoor.webp"
                 className="card-img-top p-3"
                 alt="Glassdoor"
               />
@@ -108,7 +109,7 @@ function JobFinder() {
           >
             <div className="card h-100 border border-dark d-flex justify-content-center">
               <img
-                src="images/linkedin.png"
+                src="images/jobfinder/linkedin.webp"
                 className="card-img-top p-3"
                 alt="LinkedIn"
               />

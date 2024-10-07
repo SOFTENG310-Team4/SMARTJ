@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { registerUser } from "../services/ProfileService";
 import { useNavigate } from "react-router-dom";
+import "../../styles/pages/Register.css";
 
 function Register() {
   const [name, setName] = useState("");
@@ -41,12 +42,12 @@ function Register() {
 
   return (
     <div className="container text-center mt-5">
-      <h1 className="display-4 text-center mb-5">Register</h1>
+      <h1 className="display-4 text-center mb-5">Create your account</h1>
 
       <form onSubmit={handleRegister}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">
-            Name
+            Name<span className="mandatory-field">*</span>
           </label>
           <input
             type="text"
