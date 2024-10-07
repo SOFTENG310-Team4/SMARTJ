@@ -33,9 +33,13 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     if (validate()) {
-      await registerUser({ email, password, name });
-      // Redirect to the login page
-      navigate("/login");
+      var response;
+      response = await registerUser({ email, password, name });
+      if (response.status === 201) {
+        navigate("/login");
+      } else {
+        alert("Same email already in use");
+      }
     }
   };
 
