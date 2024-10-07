@@ -115,30 +115,32 @@ function MyProfile() {
 
           <PerformanceChart sessions={profile.analytics.sessions} />
 
-          <div className="mt-5">
+          <div className="mt-5 ">
             <h3>Sessions</h3>
-            <table className="table session-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Median Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {profile.analytics.sessions &&
-                  profile.analytics.sessions
-                    .sort((a, b) => new Date(b.date) - new Date(a.date))
-                    .map((session) => (
-                      <tr
-                        key={session.id}
-                        onClick={() => handleSessionClick(session)}
-                      >
-                        <td>{new Date(session.date).toLocaleString()}</td>
-                        <td>{session.medianScore}</td>
-                      </tr>
-                    ))}
-              </tbody>
-            </table>
+            <div className="session-table-container">
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Median Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {profile.analytics.sessions &&
+                    profile.analytics.sessions
+                      .sort((a, b) => new Date(b.date) - new Date(a.date))
+                      .map((session) => (
+                        <tr
+                          key={session.id}
+                          onClick={() => handleSessionClick(session)}
+                        >
+                          <td>{new Date(session.date).toLocaleString()}</td>
+                          <td>{session.medianScore}</td>
+                        </tr>
+                      ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}

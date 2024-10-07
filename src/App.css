@@ -28,9 +28,9 @@
   color: #61dafb;
 }
 
-.session-table {
+.session-table-container {
   overflow-y: scroll;
-  max-height: 300px;
+  max-height: 400px;
 }
 
 .profile-picture {
