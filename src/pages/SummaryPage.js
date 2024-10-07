@@ -19,6 +19,9 @@ const SummaryPage = () => {
     date: new Date().toLocaleDateString(),
   };
 
+  const questionsArray = interviewData.questions.split("\n");
+  const answersArray = interviewData.answers.split("\n");
+
   useEffect(() => {
     const feedbackFeched = localStorage.getItem("feedbackFetched");
     // Call getFeedback to fetch feedback immediately
@@ -124,10 +127,23 @@ const SummaryPage = () => {
       )}
 
       <div className="d-flex flex-column justify-content-center align-items-center">
-        <h5 className="mb-4">Questions:</h5>
-        <pre>{interviewData.questions}</pre>
-        <h5 className="mb-4">Answers:</h5>
-        <pre>{interviewData.answers}</pre>
+        <h5 className="mb-4">Questions and Answers:</h5>
+        <table className="table table-bordered">
+          <thead>
+            <tr>
+              <th>Question</th>
+              <th>Answer</th>
+            </tr>
+          </thead>
+          <tbody>
+            {questionsArray.map((question, index) => (
+              <tr key={index}>
+                <td>{question}</td>
+                <td>{answersArray[index]}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
         <h5 className="mb-4">Duration: {interviewData.duration} seconds</h5>
         <h5 className="mb-4">Date: {interviewData.date}</h5>
 
