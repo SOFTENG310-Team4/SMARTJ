@@ -33,6 +33,10 @@
   max-height: 400px;
 }
 
+.session-table-container tbody tr:hover {
+  cursor: pointer;
+}
+
 .profile-picture {
   width: 100px;
   height: 100px;
