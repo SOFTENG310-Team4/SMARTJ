@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import "./App.css";
+import "../../styles/components/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "jquery";
-import "./index.css";
+import "../../index.css";
 
-import Home from "./pages/Home";
-import JobFinder from "./pages/JobFinder";
-import ContactUs from "./pages/ContactUs";
-import MyProfile from "./pages/MyProfile";
-import InterviewPractice from "./pages/InterviewPractice";
-import InterviewSettings from "./pages/InterviewSettings";
+import Home from "../pages/Home";
+import JobFinder from "../pages/JobFinder";
+import ContactUs from "../pages/ContactUs";
+import MyProfile from "../pages/MyProfile";
+import InterviewPractice from "../pages/InterviewPractice";
+import InterviewSettings from "../pages/InterviewSettings";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import SummaryPage from "./pages/SummaryPage";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import { getProfile } from "./services/ProfileService"; // Import getProfile
+import SummaryPage from "../pages/SummaryPage";
+import Register from "../pages/Register";
+import Login from "../pages/Login";
+import { getProfile } from "../services/ProfileService"; // Import getProfile
 import { Buffer } from "buffer";
 
 function App() {
@@ -133,8 +133,7 @@ function App() {
 
         {/* Footer component for site-wide information */}
         <footer
-          className="text-center text-white mt-auto"
-          style={{ backgroundColor: "#67a9d2" }}
+          className="text-center text-white mt-auto footer"
         >
           <div className="container p-4 pb-0">
             <section className="mb-4">
@@ -185,11 +184,7 @@ function App() {
           </div>
 
           <div
-            className="text-center p-3"
-            style={{
-              backgroundColor: "#c7e2fd",
-              color: "black",
-            }}
+            className="text-center p-3 copyright-section"
           >
             {/* Footer copyright information */}© 2024 Copyright:
             <a

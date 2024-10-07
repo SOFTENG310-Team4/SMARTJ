@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Countdown from "react-countdown";
+import "../../styles/components/AnswerComponent.css";
 
 const TextAnswerComponent = ({
   readingTime, // Time allocated for reading the question
@@ -99,18 +100,7 @@ const TextAnswerComponent = ({
       return <span>Start Answering!</span>;
     } else {
       return (
-        <span
-          style={{
-            fontSize: "20px",
-            color: "red",
-            backgroundColor: "#555",
-            padding: "6px",
-            borderRadius: "8px",
-            display: "inline-block",
-            width: "40px",
-            textAlign: "center",
-          }}
-        >
+        <span className="countdown-timer">
           {minutes > 0
             ? `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`
             : seconds}
@@ -133,13 +123,7 @@ const TextAnswerComponent = ({
           {isCountdownActive && (
             <button
               onClick={startAnswering}
-              className="btn"
-              style={{
-                backgroundColor: "#ffcccc",
-                borderColor: "black",
-                color: "black",
-              }}
-            >
+              className="btn start-answering-btn">
               Skip Reading Time
             </button>
           )}
@@ -169,7 +153,6 @@ const TextAnswerComponent = ({
       <div className="button-container mt-4">
         {!isCountdownActive && !isSubmitted && remainingTime > 0 && (
           <button
-            style={{ borderColor: "black" }}
             onClick={submitAnswer}
             className="btn btn-success me-2"
           >
