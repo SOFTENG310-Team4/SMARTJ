@@ -54,7 +54,7 @@ SMARTJ is built using a modern web development stack. Here are the key technolog
 
 1. Clone the repo: `git clone https://github.com/SOFTENG310-Team4/SMARTJ.git`
 2. Navigate to root directory of the Repository
-3. Create a .env file named ".env" in the root folder and add your OpenAI API key (should be in the format REACT_APP_OPENAI_API_KEY=_your key_)
+3. Create a .env file named ".env" in the root folder and add your OpenAI API key (should be in the format REACT*APP_OPENAI_API_KEY=\_your key*)
 4. Run `npm install` to install the necessary dependencies
 5. Start the MongoDB server, whether through client or `mongod` via command line
 6. Run `node server.js` to start the backend server
@@ -104,6 +104,7 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 ## Acknowledgements
 
 - We acknowledge our Initial Project developers, Anna Lin, Seth Yoo, Tony Yin, Minsung Cho, Jaewon Kim, Rusiru Dharmasekhara for their hard work
+- We acknowledge our A2 developers who continued the project, Albert Sun, Quaid Sage, Joel Kendall, Maahir Nafis, Allan Xu, Max Chen
 - Special Thanks to our Project Supervisor, Kelly Blincoe for allowing the project to flourish
 
 This project is part of the SOFTENG 310 course at the University of Auckland.
