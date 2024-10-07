@@ -70,7 +70,7 @@ function MyProfile() {
     : "images/blank-profile-picture.png";
 
   const handleSessionClick = (session) => {
-    navigate(`/session/${session.id}`, { state: { session } });
+    navigate(`/ProfileSession`, { state: { session } });
   };
 
   return (

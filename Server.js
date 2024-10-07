@@ -37,6 +37,7 @@ const userSchema = new mongoose.Schema({
         {
           id: { type: String },
           date: { type: Date },
+          gptFeedback: { type: String },
           medianScore: { type: Number },
           duration: { type: Number },
           questions: [
@@ -220,6 +221,7 @@ app.post("/api/feedback", async (req, res) => {
       id: new mongoose.Types.ObjectId().toString(),
       date: new Date(date),
       medianScore: medianScore,
+      gptFeedback: feedback,
       duration: parseInt(duration, 10),
       questions: questions.split("\n").map((question, index) => ({
         question,
