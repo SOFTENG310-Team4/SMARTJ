@@ -46,6 +46,24 @@
 .timer-text {
   min-height: 40px;
 }
+
+.interview-questions {
+  border-radius: 10px;
+  min-height: 400px;
+  background-color: #f8f9fa; /* Light background for question section */
+  border: 2px solid black; /* Border for question section */
+}
+
+.answer-section {
+  border-radius: 10px;
+  background-color: #ebecf0;
+  border: 2px solid black;
+}
+
+.question-nav-btn {
+  border: 2px solid black;
+}
+
 /* Style for the textarea */
 .form-control {
   flex-grow: 1; /* Allow the text area to grow and take available space */

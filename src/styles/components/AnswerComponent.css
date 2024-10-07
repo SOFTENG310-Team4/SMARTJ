@@ -1,0 +1,26 @@
+.countdown-timer {
+    font-size: 20px;
+    color: red;
+    background-color: #555;
+    padding: 6px;
+    border-radius: 8px;
+    display: inline-block;
+    width: 40px;
+    text-align: center;
+}
+
+.btn {
+    border-color: black;
+}
+
+.start-answering-btn {
+    background-color: #ffcccc;
+    color: black;
+    border-color: black;
+}
+
+.start-answering-btn:hover {
+    background-color: #ff9999;
+    color: black;
+    border-color: black;
+}
