@@ -193,10 +193,13 @@ app.post("/api/feedback", async (req, res) => {
 
     const { questions, answers, feedback, duration, date } = req.body;
 
+    const feedbackMatch = feedback.match(/\d+/);
+    const medianScore = feedbackMatch ? parseInt(feedbackMatch[0], 10) : 0;
+
     const newSession = {
       id: new mongoose.Types.ObjectId().toString(),
       date: new Date(date),
-      medianScore: parseInt(feedback.match(/\d+/)[0], 10),
+      medianScore: medianScore,
       duration: parseInt(duration, 10),
       questions: questions.split("\n").map((question, index) => ({
         question,
