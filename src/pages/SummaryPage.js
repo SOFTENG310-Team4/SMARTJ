@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import LikertScaleComponent from "../components/LikertScaleComponent";
 
 const SummaryPage = () => {
   // Hook to access the current location object, which contains state from the previous page
@@ -16,6 +17,25 @@ const SummaryPage = () => {
     questions: "No questions available",
     duration: 0,
     date: new Date().toLocaleDateString(),
+  };
+
+  // Getting interview type to dictate the type of feedback to be given
+  const answerType = location.state.answerType || "Video";
+
+  // Making array to set likert scale questions
+  const likertQuestions = [
+    'My answer directly addressed the question asked.',
+    'My answer was concise and to the point.',
+    'I demonstrated my skills and experience in my answer.',
+  ];
+
+  const recordedBlobs = location.state.recordedBlobs || [];
+  const [likertValues, setLikertValues] = useState(Array(likertQuestions.length).fill(0));
+
+  const changeLikert = (index, value) => {
+    const newLikertValues = [...likertValues];
+    newLikertValues[index] = value;
+    setLikertValues(newLikertValues);
   };
 
   useEffect(() => {
@@ -75,19 +95,37 @@ const SummaryPage = () => {
     }
   };
 
+  const setContent = () => {
+    if (answerType === "Text") {
+      return (
+        <div>
+          {feedback && (
+            <div className="alert alert-info mt-3" role="alert">
+              <strong>Feedback:</strong> {feedback}
+            </div>
+          )}
+        </div>
+      );
+    } else {
+      return (
+        <div className="video-replays">
+          {recordedBlobs && recordedBlobs.map((blob, index) => (
+            <div key={index} className="video-container">
+              <h5>Recording {index + 1}</h5>
+              <video src={URL.createObjectURL(blob)} controls />
+            </div>
+          ))}
+        </div>
+      );
+    }
+  };
+
+
   return (
     <div className="container mt-5">
       <h1 className="display-4 text-center mb-5">Interview Summary</h1>
 
-      {loading ? (
-          <div className="alert alert-info mt-3" role="alert">
-            <strong>Loading feedback...</strong>
-          </div>
-        ) : feedback && (
-          <div className="alert alert-info mt-3" role="alert">
-            <strong>Feedback:</strong> {feedback}
-          </div>
-        )}
+      {setContent()}
 
       <div className="d-flex flex-column justify-content-center align-items-center">
         <h5 className="mb-4">Questions:</h5>

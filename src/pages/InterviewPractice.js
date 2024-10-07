@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import QuestionComponent from "../components/QuestionComponent";
 import VideoRecordingComponent from "../components/VideoRecordingComponent";
 import TextAnswerComponent from "../components/TextAnswerComponent";
 import "../InterviewPractice.css";
+import { use } from "chai";
 
 function InterviewPractice() {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ function InterviewPractice() {
   const [questions, setQuestions] = useState([]); // Array for questions
   const [textAnswerDuration, setTextAnswerDuration] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(""); // State for the current question
+  const [allBlobs, setAllBlobs] = useState([]);
 
   // Function to navigate to the summary page with collected data
   function goToSummary(updatedQuestions) {
@@ -42,6 +44,8 @@ function InterviewPractice() {
        answers: concatenatedAnswers,
        duration: duration,
        date: new Date().toLocaleDateString(),
+       answerType: answerType,
+       recordedBlobs: allBlobs,
      },
    });
   }
@@ -51,6 +55,14 @@ function InterviewPractice() {
     setTextAnswers((prevAnswers) => [...prevAnswers, answer]); // Append new answer
     setTextAnswerDuration(duration);
   };
+
+  useEffect(() => {
+    if (recordedChunks.length > 0) {
+      const blob = new Blob(recordedChunks, { type: "video/webm" });
+      setAllBlobs((prevBlobs) => [...prevBlobs, blob]);
+    }
+  }, [recordedChunks]);
+
 
   // Increment question count, store current question, and handle navigation to summary
   const increment = () => {

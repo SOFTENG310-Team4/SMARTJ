@@ -138,6 +138,7 @@ const VideoRecordingComponent = ({
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
     }
+    
     setIsRecording(false);
   }
 
@@ -240,6 +241,7 @@ const VideoRecordingComponent = ({
         >
           Stop Recording
         </button>
+        
 
         {recordedChunks.length > 0 &&
           !isRecording &&
