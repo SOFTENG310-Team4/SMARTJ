@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import Countdown from "react-countdown";
-import "../../styles/components/AnswerComponent.css";
 
 const VideoRecordingComponent = ({
   readingTime,
@@ -76,7 +75,7 @@ const VideoRecordingComponent = ({
                 stopRecording();
                 setAreCameraAndMicAvailable(false);
               });
-          } catch {}
+          } catch { }
 
           return newTime;
         });
@@ -156,6 +155,40 @@ const VideoRecordingComponent = ({
     setIsReplay(true);
   }
 
+  async function saveRecording() {
+    if (recordedChunks.length > 0) {
+      // Create a blob URL for saving the recording
+      const blob = new Blob(recordedChunks, { type: "video/webm" });
+
+      // Generate a default name for the recording using the date
+      const date = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+      const defaultName = `recording-${date}.webm`;
+
+      try {
+        // Use the File System Access API to ask the user where they want the recording saved
+        const options = {
+          suggestedName: defaultName,
+          types: [{
+            description: 'WebM Video',
+            accept: {
+              'video/webm': ['.webm'],
+            },
+          }],
+        };
+
+        const fileHandle = await window.showSaveFilePicker(options);
+        const writableStream = await fileHandle.createWritable();
+
+        // Write the recording blob to the file
+        await writableStream.write(blob);
+        await writableStream.close();
+      } catch (error) {
+        console.error('Error saving file:', error);
+        alert('Recording failed to save. Please try again.');
+      }
+    }
+  }
+
   // Renderer for the countdown
   const countdownTimer = ({ minutes, seconds, completed }) => {
     if (completed) {
@@ -164,17 +197,28 @@ const VideoRecordingComponent = ({
     } else {
       // Display minutes and seconds properly
       return (
-          <span className="countdown-timer">
+        <span
+          style={{
+            fontSize: "20px",
+            color: "red",
+            backgroundColor: "#555",
+            padding: "6px",
+            borderRadius: "8px",
+            display: "inline-block",
+            width: "40px",
+            textAlign: "center",
+          }}
+        >
           {minutes > 0
-              ? `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`
-              : seconds}
+            ? `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`
+            : seconds}
         </span>
       );
     }
   };
 
   return (
-      <div>
+    <div>
       {!isRecording &&
         isCountdownActive && ( // Show countdown only if recording is not active
           <div className="reading-time-container" style={{ fontSize: "18px" }}>
@@ -190,7 +234,13 @@ const VideoRecordingComponent = ({
                   setIsCountdownActive(false);
                   startRecording();
                 }}
-                className="btn btn-primary start-answering-btn ">
+                className="btn btn-primary"
+                style={{
+                  backgroundColor: "#ffcccc", // Light red color
+                  borderColor: "black",
+                  color: "black",
+                }}
+              >
                 Skip Reading Time
               </button>
             )}
@@ -227,14 +277,23 @@ const VideoRecordingComponent = ({
 
         {recordedChunks.length > 0 &&
           !isRecording &&
-          !isReplay &&
           !isCountdownActive && (
             <>
+              {!isReplay && (
+                <button
+                  style={{ borderColor: "black" }}
+                  onClick={replayRecording}
+                  className="btn btn-primary me-2"
+                >
+                  Replay Recording
+                </button>
+              )}
               <button
-                onClick={replayRecording}
+                style={{ borderColor: "black" }}
+                onClick={saveRecording}
                 className="btn btn-primary me-2"
               >
-                Replay Recording
+                Save Recording
               </button>
             </>
           )}
