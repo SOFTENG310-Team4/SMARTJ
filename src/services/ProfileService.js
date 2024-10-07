@@ -84,6 +84,8 @@ export const saveFeedback = async (feedback, interviewData) => {
   } catch (error) {
     console.error("Failed to save feedback");
   }
+
+  return { message: "Feedback saved successfully" };
 };
 
 export const logout = () => {

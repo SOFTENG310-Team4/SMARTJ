@@ -20,19 +20,29 @@ const SummaryPage = () => {
   };
 
   useEffect(() => {
+    const feedbackFeched = localStorage.getItem("feedbackFetched");
     // Call getFeedback to fetch feedback immediately
-    getFeedback(interviewData.answers);
+    if (!feedbackFeched) {
+      getFeedback(interviewData.answers);
+      localStorage.setItem("feedbackFetched", true);
+    }
+
+    return () => {
+      localStorage.removeItem("feedbackFetched");
+    };
   }, [interviewData.answers]); // Dependency array ensures this runs only when answers change
 
   console.log(interviewData);
 
   const startNewInterview = () => {
     navigate("/interview-settings");
+    localStorage.removeItem("feedbackFetched");
   };
 
   // Navigate to the home page
   const goHome = () => {
     navigate("/");
+    localStorage.removeItem("feedbackFetched");
   };
 
   const getFeedback = async () => {
