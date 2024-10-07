@@ -60,6 +60,32 @@ export const updateProfile = async (profile, file) => {
   return response.json();
 };
 
+export const saveFeedback = async (feedback, interviewData) => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch("http://localhost:5000/api/feedback", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        questions: interviewData.questions,
+        answers: interviewData.answers,
+        feedback: feedback,
+        duration: interviewData.duration,
+        date: interviewData.date,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to save feedback");
+    }
+  } catch (error) {
+    console.error("Failed to save feedback");
+  }
+};
+
 export const logout = () => {
   localStorage.removeItem("token");
 };

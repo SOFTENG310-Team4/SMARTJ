@@ -33,22 +33,20 @@ const userSchema = new mongoose.Schema({
     },
     // Analytics will contain an array with session objects, within the session objects will be the session id, date, and median score for a user. it will also contain the questions answered by the user and the answers given by the user.
     analytics: {
-      type: Array,
-      default: {
-        sessions: [
-          {
-            id: { type: String },
-            date: { type: Date },
-            medianScore: { type: Number },
-            questions: [
-              {
-                question: { type: String },
-                answer: { type: String },
-              },
-            ],
-          },
-        ],
-      },
+      sessions: [
+        {
+          id: { type: String },
+          date: { type: Date },
+          medianScore: { type: Number },
+          duration: { type: Number },
+          questions: [
+            {
+              question: { type: String },
+              answer: { type: String },
+            },
+          ],
+        },
+      ],
     },
   },
 });
@@ -181,6 +179,40 @@ app.put("/api/profile", upload.single("profilePicture"), async (req, res) => {
     res
       .status(500)
       .json({ message: "An error occurred while updating the profile" });
+  }
+});
+
+app.post("/api/feedback", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { questions, answers, feedback, duration, date } = req.body;
+
+    const newSession = {
+      id: new mongoose.Types.ObjectId().toString(),
+      date: new Date(date),
+      medianScore: parseInt(feedback.match(/\d+/)[0], 10),
+      duration: parseInt(duration, 10),
+      questions: questions.split("\n").map((question, index) => ({
+        question,
+        answer: answers.split("\n")[index] || "",
+      })),
+    };
+
+    user.profile.analytics.sessions.push(newSession);
+    await user.save();
+
+    res.status(200).json({ message: "Feedback saved successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while saving feedback" });
   }
 });
 
