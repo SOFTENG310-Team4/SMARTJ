@@ -14,7 +14,7 @@ function Home() {
 
 
   return (
-      <div className="container-xxl text-center mt-5">
+      <div className="flex container-xxl text-center mt-5 home-container">
 
           <div className="landing">
               <div className="landing-heading">
@@ -67,8 +67,8 @@ function Home() {
           </div>
 
 
-          <div className="placeholder-card" style={{marginTop: 60}}/>
-          <div className="placeholder-card" style={{marginTop: 40, marginLeft: 150, marginBottom: 50}}/>
+          <div className="placeholder-card"/>
+          <div className="placeholder-card"/>
       </div>
   );
 }

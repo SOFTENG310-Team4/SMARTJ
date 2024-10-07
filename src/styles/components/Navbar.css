@@ -64,8 +64,25 @@
 }
 
 @media (min-width: 991.98px) {
+    .profile-picture-nav {
+        width: 4.5rem;
+        margin: auto;
+        margin-right: 1rem;
+    }
+
     .nav-text {
         font-size: 3.5rem;
         margin-left: 2rem;
+    }
+
+    .navbar-nav {
+        margin-left: 1rem;
+        font-family: 'Inter', sans-serif;
+        font-size: 1.4rem;
+        font-weight: bold;
+    }
+
+    .navbar-nav > * {
+        margin-left: 1rem;
     }
 }

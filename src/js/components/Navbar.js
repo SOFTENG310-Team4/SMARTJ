@@ -42,6 +42,27 @@ const Navbar = () => {
                 <h1 className="nav-text">SMARTJ</h1>
             </Link>
 
+            <div className="collapse navbar-collapse" id="navbarNav">
+                <ul className="navbar-nav">
+                    {/* Navigation links */}
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/interview-settings">
+                            Interview Practice
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/job-finder">
+                            Job Finder
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/contact-us">
+                            Contact Us
+                        </Link>
+                    </li>
+                </ul>
+            </div>
+
             <div className="sm:hidden">
                 {isAuthenticated ? (
                     <div className="nav-item">
@@ -61,33 +82,7 @@ const Navbar = () => {
                             )}
                         </Link>
                     </div>
-                ) : ( <> </> )}
-            </div>
-
-            <div className="collapse navbar-collapse" id="navbarNav">
-                <ul className="navbar-nav ms-auto">
-                    {/* Navigation links */}
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/">
-                            Home
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/interview-settings">
-                            Interview Practice
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/job-finder">
-                            Job Finder
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/contact-us">
-                            Contact Us
-                        </Link>
-                    </li>
-                </ul>
+                ) : (<> </>)}
             </div>
         </nav>
     );
