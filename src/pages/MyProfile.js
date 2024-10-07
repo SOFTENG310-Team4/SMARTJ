@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { getProfile, logout, updateProfile } from "../services/ProfileService";
+import {
+  getProfile,
+  logout,
+  updateProfile,
+  deleteProfile,
+} from "../services/ProfileService";
 import { useNavigate } from "react-router-dom";
 import { Buffer } from "buffer";
 import PerformanceChart from "../components/PerformanceChartComponent";
@@ -8,6 +13,7 @@ function MyProfile() {
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -29,6 +35,19 @@ function MyProfile() {
 
   const handleFileChange = (e) => {
     setProfilePicture(e.target.files[0]);
+  };
+
+  const handleDelete = async () => {
+    await deleteProfile();
+    handleLogout();
+  };
+
+  const confirmDelete = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteConfirmation(false);
   };
 
   useEffect(() => {
@@ -96,6 +115,9 @@ function MyProfile() {
           >
             Cancel
           </button>
+          <button className="btn btn-danger mt-3" onClick={confirmDelete}>
+            Delete Profile
+          </button>
         </div>
       ) : (
         <div>
@@ -142,6 +164,17 @@ function MyProfile() {
               </table>
             </div>
           </div>
+        </div>
+      )}
+      {showDeleteConfirmation && (
+        <div className="delete-confirmation">
+          <p>Are you sure you want to delete your profile?</p>
+          <button className="btn btn-danger" onClick={handleDelete}>
+            Yes
+          </button>
+          <button className="btn btn-secondary" onClick={cancelDelete}>
+            No
+          </button>
         </div>
       )}
     </div>

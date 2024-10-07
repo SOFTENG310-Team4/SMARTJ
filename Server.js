@@ -124,6 +124,7 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+// Profile retrieval endpoint
 app.get("/api/profile", async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
@@ -182,6 +183,25 @@ app.put("/api/profile", upload.single("profilePicture"), async (req, res) => {
   }
 });
 
+// Delete User Endpoint
+app.delete("/api/profile", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const deletedUser = await User.findByIdAndDelete(decoded.id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Upload user feedback endpoint
 app.post("/api/feedback", async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
@@ -219,6 +239,7 @@ app.post("/api/feedback", async (req, res) => {
   }
 });
 
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

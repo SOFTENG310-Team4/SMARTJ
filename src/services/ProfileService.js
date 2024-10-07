@@ -88,6 +88,18 @@ export const saveFeedback = async (feedback, interviewData) => {
   return { message: "Feedback saved successfully" };
 };
 
+export const deleteProfile = async () => {
+  const token = localStorage.getItem("token");
+  const response = await fetch("http://localhost:5000/api/profile", {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.json();
+};
+
 export const logout = () => {
   localStorage.removeItem("token");
 };
