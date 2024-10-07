@@ -91,7 +91,14 @@ app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).lean();
+    // Making sure no malicious content is passed in
+    if (!email || !password) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const checkEmail = email.toString();
+
+    const user = await User.findOne({ checkEmail }).lean();
     console.log(user);
 
     if (!user) {
