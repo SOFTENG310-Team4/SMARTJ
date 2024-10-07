@@ -75,7 +75,7 @@ const VideoRecordingComponent = ({
                 stopRecording();
                 setAreCameraAndMicAvailable(false);
               });
-          } catch {}
+          } catch { }
 
           return newTime;
         });
@@ -153,6 +153,25 @@ const VideoRecordingComponent = ({
     const blob = new Blob(recordedChunks, { type: "video/webm" });
     setVideoURL(URL.createObjectURL(blob));
     setIsReplay(true);
+  }
+
+  function saveRecording() {
+    // Create a blob URL for saving the recording
+    const blob = new Blob(recordedChunks, { type: "video/webm" });
+    const url = URL.createObjectURL(blob);
+
+    // Create a link element to download recording
+    const link = document.createElement('a');
+    link.href = url;
+
+    // Set a name for the recording using the current date
+    const date = new Date().toISOString().split('T')[0];
+    link.download = `recording-${date}.webm`;
+
+    // Download recording on link click
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   // Renderer for the countdown
@@ -243,15 +262,23 @@ const VideoRecordingComponent = ({
 
         {recordedChunks.length > 0 &&
           !isRecording &&
-          !isReplay &&
           !isCountdownActive && (
             <>
+              {!isReplay && (
+                <button
+                  style={{ borderColor: "black" }}
+                  onClick={replayRecording}
+                  className="btn btn-primary me-2"
+                >
+                  Replay Recording
+                </button>
+              )}
               <button
                 style={{ borderColor: "black" }}
-                onClick={replayRecording}
+                onClick={saveRecording}
                 className="btn btn-primary me-2"
               >
-                Replay Recording
+                Save Recording
               </button>
             </>
           )}
