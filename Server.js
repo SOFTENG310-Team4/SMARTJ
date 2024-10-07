@@ -64,13 +64,17 @@ app.post("/api/register", async (req, res) => {
     contentType: "image/png",
   };
 
+  const checkEmail = email.toString().trim().toLowerCase();
+  const checkPassword = password.toString();
+  const checkName = name.toString().trim();
+
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(checkPassword, 10);
     const newUser = new User({
-      email,
+      email: checkEmail,
       password: hashedPassword,
       profile: {
-        name,
+        name: checkName,
         profilePicture: defaultProfilePicture,
         progress: [],
         analytics: {},
@@ -96,20 +100,25 @@ app.post("/api/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const checkEmail = email.toString();
+    const checkEmail = email.toString().trim().toLowerCase();
+    const checkPassword = password.toString();
 
-    const user = await User.findOne({ checkEmail }).lean();
+    console.log(checkEmail);
+
+    const user = await User.findOne({ email: checkEmail }).lean();
     console.log(user);
 
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    if (await bcrypt.compare(password, user.password)) {
+    if (await bcrypt.compare(checkPassword, user.password)) {
       const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET);
 
       console.log(token);
       return res.status(200).json({ token });
+    } else {
+      return res.status(400).json({ message: "Invalid email or password" });
     }
   } catch (error) {
     console.error(error);
