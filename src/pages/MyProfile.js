@@ -9,10 +9,11 @@ function MyProfile() {
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
-  const [sortedSessions, setSortedSessions] = useState([]);
-  const [sortConfig, setSortConfig] = useState({ key: "date", direction: "ascending" });
   const [filteredSessions, setFilteredSessions] = useState([]);
   const [timeRange, setTimeRange] = useState("all");
+  const [tableSessions, setTableSessions] = useState([]);
+  const [tableSort, setTableSort] = useState({ column: "date", direction: "asc" });
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -40,35 +41,12 @@ function MyProfile() {
     const fetchProfile = async () => {
       const profile = await getProfile();
       setProfile(profile);
-      setSortedSessions(profile.analytics.sessions || []);
+      setFilteredSessions(profile.analytics.sessions || []);
+      setTableSessions(profile.analytics.sessions || []);
     };
 
     fetchProfile();
   }, []);
-
-  useEffect(() => {
-    if (profile && profile.analytics.sessions) {
-      let sortableSessions = [...profile.analytics.sessions];
-
-      // Sorting logic based on the key and direction
-      sortableSessions.sort((a, b) => {
-        if (sortConfig.key === "date") {
-          const dateA = new Date(a.date);
-          const dateB = new Date(b.date);
-          return sortConfig.direction === "ascending"
-              ? dateA - dateB
-              : dateB - dateA;
-        } else if (sortConfig.key === "medianScore") {
-          return sortConfig.direction === "ascending"
-              ? a.medianScore - b.medianScore
-              : b.medianScore - a.medianScore;
-        }
-        return 0;
-      });
-
-      setSortedSessions(sortableSessions);
-    }
-  }, [sortConfig, profile]);
 
   // Filter sessions based on the selected time range
   useEffect(() => {
@@ -102,22 +80,29 @@ function MyProfile() {
     }
   }, [timeRange, profile]);
 
-  const handleSort = (key) => {
-    let direction = "ascending";
-    if (sortConfig.key === key && sortConfig.direction === "ascending") {
-      direction = "descending";
-    }
-    setSortConfig({ key, direction });
-  };
+  // Sort table sessions
+  const handleTableSort = (column) => {
+    const newDirection =
+        tableSort.column === column && tableSort.direction === "asc"
+            ? "desc"
+            : "asc";
 
-  // Handle time range change (fix for undefined issue)
-  const handleTimeRangeChange = (e) => {
-    setTimeRange(e.target.value); // Updates the state when the user selects a different time range
-  };
+    const sortedSessions = [...tableSessions].sort((a, b) => {
+      if (column === "date") {
+        const dateA = new Date(a.date);
+        const dateB = new Date(b.date);
+        return newDirection === "asc" ? dateA - dateB : dateB - dateA;
+      } else if (column === "medianScore") {
+        return newDirection === "asc"
+            ? a.medianScore - b.medianScore
+            : b.medianScore - a.medianScore;
+      }
+      return 0;
+    });
 
-  if (!profile) {
-    return <div>Loading...</div>;
-  }
+    setTableSort({ column, direction: newDirection });
+    setTableSessions(sortedSessions);
+  };
 
   const profilePictureSrc = profile.profilePicture.data
     ? `data:${profile.profilePicture.contentType};base64,${Buffer.from(
@@ -128,6 +113,15 @@ function MyProfile() {
   const handleSessionClick = (session) => {
     navigate(`/session/${session.id}`, { state: { session } });
   };
+
+  // Handle time range change (fix for undefined issue)
+  const handleTimeRangeChange = (e) => {
+    setTimeRange(e.target.value); // Updates the state when the user selects a different time range
+  };
+
+  if (!profile) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container text-center mt-5">
@@ -200,20 +194,32 @@ function MyProfile() {
             </select>
           </div>
 
+          {/* Performance Chart with filtered data */}
           <PerformanceChart sessions={filteredSessions} />
 
+          {/* Table Sorting */}
           <div className="mt-5">
             <h3>Sessions</h3>
             <table className="table">
               <thead>
               <tr>
-                <th>Date</th>
-                <th>Median Score</th>
+                <th
+                    onClick={() => handleTableSort("date")}
+                    style={{ cursor: "pointer" }}
+                >
+                  Date {tableSort.column === "date" && (tableSort.direction === "asc" ? "↑" : "↓")}
+                </th>
+                <th
+                    onClick={() => handleTableSort("medianScore")}
+                    style={{ cursor: "pointer" }}
+                >
+                  Median Score {tableSort.column === "medianScore" && (tableSort.direction === "asc" ? "↑" : "↓")}
+                </th>
               </tr>
               </thead>
               <tbody>
-              {filteredSessions &&
-                  filteredSessions.map((session) => (
+              {tableSessions &&
+                  tableSessions.map((session) => (
                       <tr
                           key={session.id}
                           onClick={() => handleSessionClick(session)}
