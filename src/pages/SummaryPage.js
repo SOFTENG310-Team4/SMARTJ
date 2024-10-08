@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveFeedback } from "../services/ProfileService";
+import LikertScaleComponent from "../components/LikertScaleComponent";
+import { set } from "mongoose";
 
 const SummaryPage = () => {
   // Hook to access the current location object, which contains state from the previous page
@@ -10,6 +12,8 @@ const SummaryPage = () => {
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
+  const answerType = location.state.answerType || "Text";
+  const allBlobs = location.state.allBlobs || [];
 
   // Retrieve interview data from location state or use default values if none is provided
   const interviewData = location.state || {
@@ -115,21 +119,69 @@ const SummaryPage = () => {
     }
   };
 
+  // Making array to set likert scale questions
+  const likertQuestions = [
+    'My answer directly addressed the question asked.',
+    'My answer was concise and to the point.',
+    'I demonstrated my skills and experience in my answer.',
+  ];
+
+  const changeLikert = (videoIndex, questionIndex, value) => {
+    const newLikertValues = [...likertValues];
+    newLikertValues[videoIndex][questionIndex] = value;
+    setLikertValues(newLikertValues);
+  };
+
+  const [likertValues, setLikertValues] = useState(
+    allBlobs.map(() => Array(likertQuestions.length).fill(0))
+  );
+
+
+  const setContent = () => {
+    if (answerType === "Text") {
+      return (
+        loading ? (
+          <div className="alert alert-info mt-3" role="alert">
+            <strong>Loading feedback...</strong>
+          </div>
+        ) : (
+          feedback && (
+            <div className="alert alert-info mt-3" role="alert">
+              <strong>Feedback:</strong> {feedback}
+            </div>
+          )
+        )
+      );
+    } else {
+      return (
+        <div className="video-replays">
+          {allBlobs &&
+            allBlobs.map((blob, videoIndex) => (
+              <div key={videoIndex} className="video-container">
+                <h5>Question {videoIndex + 1}</h5>
+                <video src={URL.createObjectURL(blob)} controls />
+                {likertQuestions.map((question, questionIndex) => (
+                  <LikertScaleComponent
+                    key={questionIndex}
+                    question={question}
+                    name={`likert-${videoIndex}-${questionIndex}`}
+                    setAnswer={(value) =>
+                      changeLikert(videoIndex, questionIndex, value)
+                    }
+                  />
+                ))}
+              </div>
+            ))}
+        </div>
+      );
+    }
+  };
+
   return (
     <div className="container mt-5">
       <h1 className="display-4 text-center mb-5">Interview Summary</h1>
 
-      {loading ? (
-        <div className="alert alert-info mt-3" role="alert">
-          <strong>Loading feedback...</strong>
-        </div>
-      ) : (
-        feedback && (
-          <div className="alert alert-info mt-3" role="alert">
-            <strong>Feedback:</strong> {feedback}
-          </div>
-        )
-      )}
+      {setContent()}
 
       <div className="d-flex flex-column justify-content-center align-items-center">
         <h5 className="mb-4">Questions and Answers:</h5>
