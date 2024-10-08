@@ -3,6 +3,7 @@ import { getProfile, logout, updateProfile } from "../services/ProfileService";
 import { useNavigate } from "react-router-dom";
 import { Buffer } from "buffer";
 import PerformanceChart from "../components/PerformanceChartComponent";
+import dayjs from "dayjs";
 
 function MyProfile() {
   const [profile, setProfile] = useState(null);
@@ -10,6 +11,8 @@ function MyProfile() {
   const [profilePicture, setProfilePicture] = useState(null);
   const [sortedSessions, setSortedSessions] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: "date", direction: "ascending" });
+  const [filteredSessions, setFilteredSessions] = useState([]);
+  const [timeRange, setTimeRange] = useState("all");
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -67,12 +70,49 @@ function MyProfile() {
     }
   }, [sortConfig, profile]);
 
+  // Filter sessions based on the selected time range
+  useEffect(() => {
+    if (profile && profile.analytics.sessions) {
+      const now = dayjs();
+      let filtered = profile.analytics.sessions;
+
+      switch (timeRange) {
+        case "week":
+          filtered = filtered.filter((session) =>
+              dayjs(session.date).isAfter(now.subtract(1, "week"))
+          );
+          break;
+        case "month":
+          filtered = filtered.filter((session) =>
+              dayjs(session.date).isAfter(now.subtract(1, "month"))
+          );
+          break;
+        case "year":
+          filtered = filtered.filter((session) =>
+              dayjs(session.date).isAfter(now.subtract(1, "year"))
+          );
+          break;
+        case "all":
+        default:
+          filtered = profile.analytics.sessions;
+          break;
+      }
+
+      setFilteredSessions(filtered);
+    }
+  }, [timeRange, profile]);
+
   const handleSort = (key) => {
     let direction = "ascending";
     if (sortConfig.key === key && sortConfig.direction === "ascending") {
       direction = "descending";
     }
     setSortConfig({ key, direction });
+  };
+
+  // Handle time range change (fix for undefined issue)
+  const handleTimeRangeChange = (e) => {
+    setTimeRange(e.target.value); // Updates the state when the user selects a different time range
   };
 
   if (!profile) {
@@ -142,25 +182,38 @@ function MyProfile() {
             </button>
           </div>
 
-          <PerformanceChart sessions={sortedSessions} />
+          {/* Time Range Selector */}
+          <div className="mt-4">
+            <label htmlFor="timeRange" className="form-label">
+              <h5>Filter By Time Range:</h5>
+            </label>
+            <select
+                id="timeRange"
+                className="form-select"
+                value={timeRange}
+                onChange={handleTimeRangeChange}
+            >
+              <option value="week">Last Week</option>
+              <option value="month">Last Month</option>
+              <option value="year">Last Year</option>
+              <option value="all">All Time</option>
+            </select>
+          </div>
+
+          <PerformanceChart sessions={filteredSessions} />
 
           <div className="mt-5">
             <h3>Sessions</h3>
             <table className="table">
               <thead>
               <tr>
-                <th onClick={() => handleSort("date")}>
-                  Date {sortConfig.key === "date" ? (sortConfig.direction === "ascending" ? "↑" : "↓") : ""}
-                </th>
-                <th onClick={() => handleSort("medianScore")}>
-                  Median
-                  Score {sortConfig.key === "medianScore" ? (sortConfig.direction === "ascending" ? "↑" : "↓") : ""}
-                </th>
+                <th>Date</th>
+                <th>Median Score</th>
               </tr>
               </thead>
               <tbody>
-              {sortedSessions &&
-                  sortedSessions.map((session) => (
+              {filteredSessions &&
+                  filteredSessions.map((session) => (
                       <tr
                           key={session.id}
                           onClick={() => handleSessionClick(session)}
