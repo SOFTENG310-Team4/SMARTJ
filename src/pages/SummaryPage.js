@@ -30,11 +30,13 @@ const SummaryPage = () => {
   ];
 
   const recordedBlobs = location.state.recordedBlobs || [];
-  const [likertValues, setLikertValues] = useState(Array(likertQuestions.length).fill(0));
+  const [likertValues, setLikertValues] = useState(
+    recordedBlobs.map(() => Array(likertQuestions.length).fill(0))
+  );
 
-  const changeLikert = (index, value) => {
+  const changeLikert = (videoIndex, questionIndex, value) => {
     const newLikertValues = [...likertValues];
-    newLikertValues[index] = value;
+    newLikertValues[videoIndex][questionIndex] = value;
     setLikertValues(newLikertValues);
   };
 
@@ -109,12 +111,22 @@ const SummaryPage = () => {
     } else {
       return (
         <div className="video-replays">
-          {recordedBlobs && recordedBlobs.map((blob, index) => (
-            <div key={index} className="video-container">
-              <h5>Recording {index + 1}</h5>
-              <video src={URL.createObjectURL(blob)} controls />
-            </div>
-          ))}
+          {recordedBlobs &&
+            recordedBlobs.map((blob, videoIndex) => (
+              <div key={videoIndex} className="video-container">
+                <h5>Question {videoIndex + 1}</h5>
+                <video src={URL.createObjectURL(blob)} controls />
+                {likertQuestions.map((question, questionIndex) => (
+                  <LikertScaleComponent
+                    key={questionIndex}
+                    question={question}
+                    setAnswer={(value) =>
+                      changeLikert(videoIndex, questionIndex, value)
+                    }
+                  />
+                ))}
+              </div>
+            ))}
         </div>
       );
     }

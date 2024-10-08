@@ -1,4 +1,5 @@
 import React from 'react';
+import '../LikertScaleComponent.css';
 
 const LikertScaleComponent = ({ question, setAnswer }) => {
   const likertOptions = [
@@ -10,22 +11,24 @@ const LikertScaleComponent = ({ question, setAnswer }) => {
   ];
 
   return (
-    <div className="container mt-5">
-      <h2>{question}</h2>
-      <div className="row mt-4">
+    <div className="likert-container mt-5">
+      <h2 className='likert-question'>{question}</h2>
+      <div className="likert-options mt-4">
         {likertOptions.map((option) => (
-          <div key={option.value} className="col-2">
-            <button
-              className="btn btn-primary btn-block"
-              onClick={() => setAnswer(option.value)}
-            >
-              {option.text}
-            </button>
-          </div>
+          <label key={option.value} className="likert-label">
+            <span className="likert-label-text">{option.text}</span>
+            <input
+              type="radio"
+              name={`likert-${question}`}
+              value={option.value}
+              onChange={() => setAnswer(option.value)}
+              className="likert-radio"
+            />
+          </label>
         ))}
       </div>
     </div>
   );
-}
+};
 
 export default LikertScaleComponent;
