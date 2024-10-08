@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import "./App.css";
+import "../../css/pages/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "jquery";
-import "./index.css";
+import "../../index.css";
 
-import Home from "./pages/Home";
-import JobFinder from "./pages/JobFinder";
-import ContactUs from "./pages/ContactUs";
-import MyProfile from "./pages/MyProfile";
-import InterviewPractice from "./pages/InterviewPractice";
-import InterviewSettings from "./pages/InterviewSettings";
+import Home from "./Home";
+import JobFinder from "./JobFinder";
+import ContactUs from "./ContactUs";
+import MyProfile from "./MyProfile";
+import InterviewPractice from "./InterviewPractice";
+import InterviewSettings from "./InterviewSettings";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import SummaryPage from "./pages/SummaryPage";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import ProfileSession from "./pages/ProfileSession";
-import { getProfile } from "./services/ProfileService"; // Import getProfile
+import SummaryPage from "./SummaryPage";
+import Register from "./Register";
+import Login from "./Login";
+import ProfileSession from "./ProfileSession";
+import { getProfile } from "../services/ProfileService"; // Import getProfile
 import { Buffer } from "buffer";
 
 function App() {

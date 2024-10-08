@@ -1,9 +1,9 @@
-import React from 'react';
-import '../LikertScaleComponent.css';
+import React from "react";
+import "../../css/components/LikertScaleComponent.css";
 
 const LikertScaleComponent = ({ question, setAnswer, groupName }) => {
   // setting the likert scale options
-    const likertOptions = [
+  const likertOptions = [
     { value: 1, text: "Strongly Disagree" },
     { value: 2, text: "Disagree" },
     { value: 3, text: "Neutral" },

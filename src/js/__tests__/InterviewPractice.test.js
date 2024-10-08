@@ -1,8 +1,8 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import InterviewPractice from "../pages/InterviewPractice";
-import Summary from "../pages/SummaryPage";
+import InterviewPractice from "../../pages/InterviewPractice";
+import Summary from "../../pages/SummaryPage";
 
 // Mock the child components that are used in InterviewPractice
 jest.mock("../components/QuestionComponent", () => () => (

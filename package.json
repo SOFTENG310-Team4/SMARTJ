@@ -38,8 +38,8 @@
   },
   "scripts": {
     "start": "concurrently \"npm run start-react\" \"npm run start-server\"",
-    "start-react": "react-scripts start",
-    "start-server": "node Server.js",
+    "start-react": "react-scripts start src/js/pages/index.js",
+    "start-server": "node src/js/server/Server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

@@ -5,11 +5,11 @@
 import React, { act } from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import Login from "../pages/Login";
-import MyProfile from "../pages/MyProfile";
+import MyProfile from "../../pages/MyProfile";
+import Login from "../../pages/Login";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import { getProfile } from "../services/ProfileService";
+import { getProfile } from "../../services/ProfileService";
 
 const localStorageMock = (function () {
   let store = {};
@@ -32,18 +32,19 @@ Object.defineProperty(window, "localStorage", {
 });
 
 jest.mock("../services/ProfileService", () => ({
-  registerUser: jest.fn(),
-  loginUser: jest.fn(),
   getProfile: jest.fn(),
+  logout: jest.fn(),
+  updateProfile: jest.fn(),
+  deleteProfile: jest.fn(),
 }));
 
-describe("Login", () => {
+describe("MyProfile", () => {
   const setup = () => {
     return render(
-      <MemoryRouter initialEntries={["/login"]}>
+      <MemoryRouter initialEntries={["/my-profile"]}>
         <Routes>
-          <Route path="/login" element={<Login />} />
           <Route path="/my-profile" element={<MyProfile />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </MemoryRouter>
     );
@@ -85,14 +86,7 @@ describe("Login", () => {
     localStorage.clear();
   });
 
-  test("renders login form correctly", () => {
-    setup();
-    expect(screen.getByLabelText("Email address")).toBeInTheDocument();
-    expect(screen.getByLabelText("Password")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
-  });
-
-  test("logs in a user and loads profile", async () => {
+  test("renders profile details correctly", async () => {
     getProfile.mockResolvedValueOnce({
       name: "Test User",
       profilePicture: {
@@ -104,31 +98,38 @@ describe("Login", () => {
       },
     });
 
-    setup();
     localStorageMock.setItem("token", "fake-jwt-token");
-    fireEvent.change(screen.getByLabelText("Email address"), {
-      target: { value: "test@example.com" },
-    });
-    fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "password123" },
-    });
-
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Login" }));
-    });
-
-    // Check if the token is set in localStorage
-    expect(localStorageMock.getItem("token")).toBe("fake-jwt-token");
+    setup();
 
     await waitFor(() => {
-      expect(
-        screen.getByText((content, element) => {
-          return (
-            element.tagName.toLowerCase() === "h1" &&
-            content.includes("Welcome! Test User")
-          );
-        })
-      ).toBeInTheDocument();
+      expect(screen.getByText("Welcome! Test User")).toBeInTheDocument();
+    });
+  });
+
+  test("allows editing profile", async () => {
+    getProfile.mockResolvedValueOnce({
+      name: "Test User",
+      profilePicture: {
+        data: "",
+        contentType: "image/png",
+      },
+      analytics: {
+        sessions: [],
+      },
+    });
+
+    localStorageMock.setItem("token", "fake-jwt-token");
+    setup();
+
+    fireEvent.click(await screen.findByText("Edit"));
+    expect(screen.getByLabelText("Name")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Name"), {
+      target: { value: "Updated User" },
+    });
+    fireEvent.click(screen.getByText("Save"));
+
+    await waitFor(() => {
+      expect(screen.getByText("Welcome! Updated User")).toBeInTheDocument();
     });
   });
 });

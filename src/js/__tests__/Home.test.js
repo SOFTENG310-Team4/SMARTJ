@@ -1,9 +1,9 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "../pages/Home";
-import InterviewSettings from "../pages/InterviewSettings";
-import JobFinder from "../pages/JobFinder";
+import Home from "../../pages/Home";
+import InterviewSettings from "../../pages/InterviewSettings";
+import JobFinder from "../../pages/JobFinder";
 
 describe("Home component", () => {
   // Render the Home component with the given routes

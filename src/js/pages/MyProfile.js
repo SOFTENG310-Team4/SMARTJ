@@ -246,15 +246,15 @@ function MyProfile() {
         </div>
       )}
       {showDeleteConfirmation && (
-          <div className="delete-confirmation">
-            <p>Are you sure you want to delete your profile?</p>
-            <button className="btn btn-danger" onClick={handleDelete}>
-              Yes
-            </button>
-            <button className="btn btn-secondary" onClick={cancelDelete}>
-              No
-            </button>
-          </div>
+        <div className="delete-confirmation">
+          <p>Are you sure you want to delete your profile?</p>
+          <button className="btn btn-danger" onClick={handleDelete}>
+            Yes
+          </button>
+          <button className="btn btn-secondary" onClick={cancelDelete}>
+            No
+          </button>
+        </div>
       )}
     </div>
   );

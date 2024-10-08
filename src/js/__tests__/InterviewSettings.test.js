@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import InterviewSettings from "../pages/InterviewSettings";
+import InterviewSettings from "../../pages/InterviewSettings";
 
 describe("InterviewSettings", () => {
   test("renders Interview Settings page correctly", () => {

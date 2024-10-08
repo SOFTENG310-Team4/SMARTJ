@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../InterviewSettings.css";
+import "../../css/pages/InterviewSettings.css";
 
 function InterviewSettings() {
   // State for number of questions, defaulting to 3

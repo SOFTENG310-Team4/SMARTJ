@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import QuestionComponent from "../components/QuestionComponent";
 import VideoRecordingComponent from "../components/VideoRecordingComponent";
 import TextAnswerComponent from "../components/TextAnswerComponent";
-import "../InterviewPractice.css";
+import "../../css/pages/InterviewPractice.css";
 
 function InterviewPractice() {
   const navigate = useNavigate();
