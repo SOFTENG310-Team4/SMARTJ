@@ -17,6 +17,7 @@ function MyProfile() {
   const [filteredSessions, setFilteredSessions] = useState([]);
   const [timeRange, setTimeRange] = useState("all");
   const [tableSessions, setTableSessions] = useState([]);
+
   const [tableSort, setTableSort] = useState({
     column: "date",
     direction: "asc",
@@ -245,15 +246,15 @@ function MyProfile() {
         </div>
       )}
       {showDeleteConfirmation && (
-        <div className="delete-confirmation">
-          <p>Are you sure you want to delete your profile?</p>
-          <button className="btn btn-danger" onClick={handleDelete}>
-            Yes
-          </button>
-          <button className="btn btn-secondary" onClick={cancelDelete}>
-            No
-          </button>
-        </div>
+          <div className="delete-confirmation">
+            <p>Are you sure you want to delete your profile?</p>
+            <button className="btn btn-danger" onClick={handleDelete}>
+              Yes
+            </button>
+            <button className="btn btn-secondary" onClick={cancelDelete}>
+              No
+            </button>
+          </div>
       )}
     </div>
   );
