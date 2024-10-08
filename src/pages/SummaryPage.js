@@ -37,6 +37,7 @@ const SummaryPage = () => {
 
   console.log(interviewData);
 
+  // Function to start a new interview, redirects to interview
   const startNewInterview = () => {
     navigate("/interview-settings");
     localStorage.removeItem("feedbackFetched");
@@ -48,14 +49,18 @@ const SummaryPage = () => {
     localStorage.removeItem("feedbackFetched");
   };
 
+  // Fetches feedback via OpenAI API
   const getFeedback = async () => {
     setLoading(true);
+
+    // Checks if the answer is empty and handles accordingly
     if (interviewData.answers === "") {
       setFeedback("No answers provided. Unable to provide feedback.");
       setLoading(false);
       return;
     }
     try {
+      // Calls OpenAI API with the users questiosn and answers to get feedback
       const response = await fetch(
         "https://api.openai.com/v1/chat/completions",
         {
@@ -89,9 +94,8 @@ const SummaryPage = () => {
       );
 
       const data = await response.json();
-
+      // Handle API errors and output error code
       if (!response.ok) {
-        // Handle API errors and output error code
         setFeedback(
           `Error ${response.status}: ${
             data.error?.message || "An unknown error occurred."
