@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { saveFeedback } from "../services/ProfileService";
+import { saveFeedback, saveLikert } from "../services/ProfileService";
 import LikertScaleComponent from "../components/LikertScaleComponent";
 import { set } from "mongoose";
 
@@ -121,9 +121,9 @@ const SummaryPage = () => {
 
   // Making array to set likert scale questions
   const likertQuestions = [
-    'My answer directly addressed the question asked.',
-    'My answer was concise and to the point.',
-    'I demonstrated my skills and experience in my answer.',
+    "My answer directly addressed the question asked.",
+    "My answer was concise and to the point.",
+    "I demonstrated my skills and experience in my answer.",
   ];
 
   const changeLikert = (videoIndex, questionIndex, value) => {
@@ -136,20 +136,29 @@ const SummaryPage = () => {
     allBlobs.map(() => Array(likertQuestions.length).fill(0))
   );
 
+  const allLikertFilled = () => {
+    return likertValues.every((video) => video.every((value) => value !== 0));
+  };
+
+  const handleLikertSubmit = () => {
+    if (allLikertFilled()) {
+      saveLikert(likertValues, interviewData);
+    } else {
+      alert("Please fill out all the likert scale questions.");
+    }
+  };
 
   const setContent = () => {
     if (answerType === "Text") {
-      return (
-        loading ? (
+      return loading ? (
+        <div className="alert alert-info mt-3" role="alert">
+          <strong>Loading feedback...</strong>
+        </div>
+      ) : (
+        feedback && (
           <div className="alert alert-info mt-3" role="alert">
-            <strong>Loading feedback...</strong>
+            <strong>Feedback:</strong> {feedback}
           </div>
-        ) : (
-          feedback && (
-            <div className="alert alert-info mt-3" role="alert">
-              <strong>Feedback:</strong> {feedback}
-            </div>
-          )
         )
       );
     } else {
@@ -172,6 +181,9 @@ const SummaryPage = () => {
                 ))}
               </div>
             ))}
+          <button className="btn btn-primary mt-3" onClick={handleLikertSubmit}>
+            Submit Likert Values
+          </button>
         </div>
       );
     }
