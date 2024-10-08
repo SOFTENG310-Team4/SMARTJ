@@ -47,17 +47,17 @@ const Navbar = () => {
                     {/* Navigation links */}
                     <li className="nav-item">
                         <Link className="nav-link" to="/interview-settings">
-                            Interview Practice
+                            Practice
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/job-finder">
-                            Job Finder
+                            Job search
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/contact-us">
-                            Contact Us
+                            Contact us
                         </Link>
                     </li>
                 </ul>
