@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { Buffer } from "buffer";
 import PerformanceChart from "../components/PerformanceChartComponent";
 import dayjs from "dayjs";
+import "../../styles/pages/MyProfile.css";
 
 function MyProfile() {
   const [profile, setProfile] = useState(null);
@@ -141,9 +142,8 @@ function MyProfile() {
   };
 
   return (
-    <div className="container text-center mt-5">
-      <h1 className="display-4">Welcome! {profile.name} </h1>
-      <p className="lead">View and edit your profile details.</p>
+    <div className="container mt-5">
+      <h1 className="profile-header">Welcome back <span className={"gradient-text"}>{profile.name}</span></h1>
       {isEditing ? (
         <div>
           <form>
@@ -187,61 +187,63 @@ function MyProfile() {
           </button>
         </div>
       ) : (
-        <div>
-          <img
-            src={profilePictureSrc}
-            className="profile-picture"
-            alt="Profile"
-          />
-          <div className="button-group mt-3">
-            <button className="btn btn-primary" onClick={handleEdit}>
-              Edit
-            </button>
-            <button className="btn btn-danger" onClick={handleLogout}>
-              Logout
-            </button>
-          </div>
-
-          <PerformanceChart sessions={profile.analytics.sessions} />
-
-          <div className="mt-5 ">
-            <h3>Sessions</h3>
-            <div className="session-table-container">
-              <table className="table">
-                <thead>
+        <div className={"profile-container"}>
+          <div className={"details-container"}>
+            <img
+                src={profilePictureSrc}
+                className="profile-picture"
+                alt="Profile"
+            />
+            <div className="button-group mt-3">
+              <button className="profile-edit" onClick={handleEdit}>
+                Edit
+              </button>
+              <button className="profile-logout" onClick={handleLogout}>
+                Logout
+              </button>
+            </div>
+            <div className="session-table">
+              <h3 className={"table-header"}>Sessions</h3>
+              <div className="session-table-container">
+                <table className="table">
+                  <thead>
                   <tr>
                     <th
-                      onClick={() => handleTableSort("date")}
-                      style={{ cursor: "pointer" }}
+                        onClick={() => handleTableSort("date")}
+                        style={{cursor: "pointer"}}
                     >
                       Date{" "}
                       {tableSort.column === "date" &&
-                        (tableSort.direction === "asc" ? "↑" : "↓")}
+                          (tableSort.direction === "asc" ? "↑" : "↓")}
                     </th>
                     <th
-                      onClick={() => handleTableSort("medianScore")}
-                      style={{ cursor: "pointer" }}
+                        onClick={() => handleTableSort("medianScore")}
+                        style={{cursor: "pointer"}}
                     >
                       Median Score{" "}
                       {tableSort.column === "medianScore" &&
-                        (tableSort.direction === "asc" ? "↑" : "↓")}
+                          (tableSort.direction === "asc" ? "↑" : "↓")}
                     </th>
                   </tr>
-                </thead>
-                <tbody>
+                  </thead>
+                  <tbody>
                   {tableSessions &&
-                    tableSessions.map((session) => (
-                      <tr
-                        key={session.id}
-                        onClick={() => handleSessionClick(session)}
-                      >
-                        <td>{new Date(session.date).toLocaleString()}</td>
-                        <td>{session.medianScore}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+                      tableSessions.map((session) => (
+                          <tr
+                              key={session.id}
+                              onClick={() => handleSessionClick(session)}
+                          >
+                            <td>{new Date(session.date).toLocaleString()}</td>
+                            <td>{session.medianScore}</td>
+                          </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
+          <div className={"chart-container"}>
+            <PerformanceChart sessions={profile.analytics.sessions} />
           </div>
         </div>
       )}

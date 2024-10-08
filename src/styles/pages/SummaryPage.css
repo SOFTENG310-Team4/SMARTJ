@@ -5,3 +5,35 @@
     font-style: italic;
     filter: drop-shadow(0px 2px 1px rgba(0,0,0,0.35));
 }
+
+.summary-button {
+    height: 50px;
+    background-color: #3F37DE;
+    border: none;
+    border-bottom: 6px solid #0F07AE;
+    padding: 1px;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    transition: all 0.1s;
+    position: relative;
+    width: 220px;
+    color: #fff;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.summary-button:hover {
+    background-color: #4F47EE;
+}
+
+.summary-button-secondary {
+    width: 150px !important;
+    background-color: #DDDBFF !important;
+    border-bottom: 6px solid #bDbBdF !important;
+    color: #000 !important;
+    font-weight: 500 !important;
+}
+
+.summary-button-secondary:hover {
+    background-color: #C7C4FF !important;
+}

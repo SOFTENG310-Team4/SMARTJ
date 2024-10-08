@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveFeedback, saveLikert } from "../services/ProfileService";
 import LikertScaleComponent from "../components/LikertScaleComponent";
-import { set } from "mongoose";
+import "../../styles/pages/SummaryPage.css";
+
 
 const SummaryPage = () => {
   // Hook to access the current location object, which contains state from the previous page
@@ -199,7 +200,7 @@ const SummaryPage = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="display-4 text-center mb-5">Interview Summary</h1>
+      <h1 className="summary-heading">Interview Summary</h1>
 
       {setContent()}
 
@@ -225,10 +226,10 @@ const SummaryPage = () => {
         <h5 className="mb-4">Date: {interviewData.date}</h5>
 
         <div className="mt-2">
-          <button className="btn btn-primary me-3" onClick={startNewInterview}>
+          <button className="summary-button" onClick={startNewInterview}>
             Start New Practice
           </button>
-          <button className="btn btn-info" onClick={goHome}>
+          <button className="summary-button summary-button-secondary" onClick={goHome}>
             Go Home
           </button>
         </div>

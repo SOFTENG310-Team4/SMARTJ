@@ -1,0 +1,117 @@
+.gradient-text {
+    background: linear-gradient(90deg, #2F27CE 0%, #8B3DFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.profile-header {
+    width: 100%;
+    display: block;
+    text-align: left;
+    font-weight: 900;
+    font-size: 4rem;
+    font-style: italic;
+    filter: drop-shadow(0px 2px 1px rgba(0,0,0,0.35));
+}
+
+.profile-picture {
+    width: 20%;
+    border-radius: 50%;
+}
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+}
+
+.details-container {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+}
+
+.chart-container {
+    width: 50%;
+}
+
+.session-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.button-group {
+    margin-bottom: 2rem;
+}
+
+.button-group button {
+    height: 50px;
+    background-color: #3F37DE;
+    border: none;
+    border-bottom: 6px solid #0F07AE;
+    padding: 1px;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    transition: all 0.1s;
+    position: relative;
+    width: 100px;
+    color: #fff;
+    font-weight: bold;
+    margin-right: 1rem;
+}
+
+.button-group button:hover {
+    background-color: #4F47EE;
+}
+
+.profile-logout {
+    background-color: #DDDBFF !important;
+    border-bottom: 6px solid #bDbBdF !important;
+    color: #000 !important;
+    font-weight: 500 !important;
+}
+
+.profile-logout:hover {
+    background-color: #C7C4FF !important;
+}
+
+
+.table-header {
+    font-style: normal;
+    font-size: 1.5rem;
+    font-weight: 700;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+@media(max-width: 991.98px) {
+    .profile-picture {
+        width: 20%;
+    }
+
+    .profile-container {
+        flex-direction: column;
+    }
+
+    .details-container {
+        width: 100%;
+        align-items: center;
+    }
+
+    .chart-container {
+        width: 100%;
+    }
+
+    .profile-header {
+        text-align: center;
+    }
+
+    .session-table {
+        width: 100%;
+    }
+
+    .chart-container {
+        width: 95%;
+    }
+}
