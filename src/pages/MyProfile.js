@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { getProfile, logout, updateProfile } from "../services/ProfileService";
+import {
+  getProfile,
+  logout,
+  updateProfile,
+  deleteProfile,
+} from "../services/ProfileService";
 import { useNavigate } from "react-router-dom";
 import { Buffer } from "buffer";
 import PerformanceChart from "../components/PerformanceChartComponent";
@@ -13,6 +18,7 @@ function MyProfile() {
   const [timeRange, setTimeRange] = useState("all");
   const [tableSessions, setTableSessions] = useState([]);
   const [tableSort, setTableSort] = useState({ column: "date", direction: "asc" });
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
   const navigate = useNavigate();
 
@@ -35,6 +41,19 @@ function MyProfile() {
 
   const handleFileChange = (e) => {
     setProfilePicture(e.target.files[0]);
+  };
+
+  const handleDelete = async () => {
+    await deleteProfile();
+    handleLogout();
+  };
+
+  const confirmDelete = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteConfirmation(false);
   };
 
   useEffect(() => {
@@ -111,7 +130,7 @@ function MyProfile() {
     : "images/blank-profile-picture.png";
 
   const handleSessionClick = (session) => {
-    navigate(`/session/${session.id}`, { state: { session } });
+    navigate(`/ProfileSession`, { state: { session } });
   };
 
   // Handle time range change (fix for undefined issue)
@@ -158,6 +177,15 @@ function MyProfile() {
           </form>
           <button className="btn btn-primary mt-3" onClick={handleSave}>
             Save
+          </button>
+          <button
+            className="btn btn-danger mt-3"
+            onClick={() => setIsEditing(false)}
+          >
+            Cancel
+          </button>
+          <button className="btn btn-danger mt-3" onClick={confirmDelete}>
+            Delete Profile
           </button>
         </div>
       ) : (
@@ -231,6 +259,17 @@ function MyProfile() {
               </tbody>
             </table>
           </div>
+        </div>
+      )}
+      {showDeleteConfirmation && (
+        <div className="delete-confirmation">
+          <p>Are you sure you want to delete your profile?</p>
+          <button className="btn btn-danger" onClick={handleDelete}>
+            Yes
+          </button>
+          <button className="btn btn-secondary" onClick={cancelDelete}>
+            No
+          </button>
         </div>
       )}
     </div>

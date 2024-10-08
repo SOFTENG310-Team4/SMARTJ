@@ -33,22 +33,21 @@ const userSchema = new mongoose.Schema({
     },
     // Analytics will contain an array with session objects, within the session objects will be the session id, date, and median score for a user. it will also contain the questions answered by the user and the answers given by the user.
     analytics: {
-      type: Array,
-      default: {
-        sessions: [
-          {
-            id: { type: String },
-            date: { type: Date },
-            medianScore: { type: Number },
-            questions: [
-              {
-                question: { type: String },
-                answer: { type: String },
-              },
-            ],
-          },
-        ],
-      },
+      sessions: [
+        {
+          id: { type: String },
+          date: { type: Date },
+          gptFeedback: { type: String },
+          medianScore: { type: Number },
+          duration: { type: Number },
+          questions: [
+            {
+              question: { type: String },
+              answer: { type: String },
+            },
+          ],
+        },
+      ],
     },
   },
 });
@@ -64,13 +63,17 @@ app.post("/api/register", async (req, res) => {
     contentType: "image/png",
   };
 
+  const checkEmail = email.toString().trim().toLowerCase();
+  const checkPassword = password.toString();
+  const checkName = name.toString().trim();
+
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(checkPassword, 10);
     const newUser = new User({
-      email,
+      email: checkEmail,
       password: hashedPassword,
       profile: {
-        name,
+        name: checkName,
         profilePicture: defaultProfilePicture,
         progress: [],
         analytics: {},
@@ -91,18 +94,30 @@ app.post("/api/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).lean();
+    // Making sure no malicious content is passed in
+    if (!email || !password) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const checkEmail = email.toString().trim().toLowerCase();
+    const checkPassword = password.toString();
+
+    console.log(checkEmail);
+
+    const user = await User.findOne({ email: checkEmail }).lean();
     console.log(user);
 
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    if (await bcrypt.compare(password, user.password)) {
+    if (await bcrypt.compare(checkPassword, user.password)) {
       const token = jwt.sign({ email: user.email, id: user._id }, JWT_SECRET);
 
       console.log(token);
       return res.status(200).json({ token });
+    } else {
+      return res.status(400).json({ message: "Invalid email or password" });
     }
   } catch (error) {
     console.error(error);
@@ -110,6 +125,7 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
+// Profile retrieval endpoint
 app.get("/api/profile", async (req, res) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
@@ -168,6 +184,64 @@ app.put("/api/profile", upload.single("profilePicture"), async (req, res) => {
   }
 });
 
+// Delete User Endpoint
+app.delete("/api/profile", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const deletedUser = await User.findByIdAndDelete(decoded.id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// Upload user feedback endpoint
+app.post("/api/feedback", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { questions, answers, feedback, duration, date } = req.body;
+
+    const feedbackMatch = feedback.match(/\d+/);
+    const medianScore = feedbackMatch ? parseInt(feedbackMatch[0], 10) : 0;
+
+    const newSession = {
+      id: new mongoose.Types.ObjectId().toString(),
+      date: new Date(date),
+      medianScore: medianScore,
+      gptFeedback: feedback,
+      duration: parseInt(duration, 10),
+      questions: questions.split("\n").map((question, index) => ({
+        question,
+        answer: answers.split("\n")[index] || "",
+      })),
+    };
+
+    user.profile.analytics.sessions.push(newSession);
+    await user.save();
+
+    res.status(200).json({ message: "Feedback saved successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while saving feedback" });
+  }
+});
+
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
