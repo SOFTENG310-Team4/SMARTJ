@@ -26,7 +26,7 @@ const SummaryPage = () => {
     const feedbackFeched = localStorage.getItem("feedbackFetched");
     // Call getFeedback to fetch feedback immediately
     if (!feedbackFeched) {
-      getFeedback(interviewData.answers);
+      getFeedback();
       localStorage.setItem("feedbackFetched", true);
     }
 

@@ -17,7 +17,11 @@ function MyProfile() {
   const [filteredSessions, setFilteredSessions] = useState([]);
   const [timeRange, setTimeRange] = useState("all");
   const [tableSessions, setTableSessions] = useState([]);
-  const [tableSort, setTableSort] = useState({ column: "date", direction: "asc" });
+
+  const [tableSort, setTableSort] = useState({
+    column: "date",
+    direction: "asc",
+  });
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const navigate = useNavigate();
 
@@ -75,17 +79,17 @@ function MyProfile() {
       switch (timeRange) {
         case "week":
           filtered = filtered.filter((session) =>
-              dayjs(session.date).isAfter(now.subtract(1, "week"))
+            dayjs(session.date).isAfter(now.subtract(1, "week"))
           );
           break;
         case "month":
           filtered = filtered.filter((session) =>
-              dayjs(session.date).isAfter(now.subtract(1, "month"))
+            dayjs(session.date).isAfter(now.subtract(1, "month"))
           );
           break;
         case "year":
           filtered = filtered.filter((session) =>
-              dayjs(session.date).isAfter(now.subtract(1, "year"))
+            dayjs(session.date).isAfter(now.subtract(1, "year"))
           );
           break;
         case "all":
@@ -101,9 +105,9 @@ function MyProfile() {
   // Sort table sessions
   const handleTableSort = (column) => {
     const newDirection =
-        tableSort.column === column && tableSort.direction === "asc"
-            ? "desc"
-            : "asc";
+      tableSort.column === column && tableSort.direction === "asc"
+        ? "desc"
+        : "asc";
 
     const sortedSessions = [...tableSessions].sort((a, b) => {
       if (column === "date") {
@@ -112,8 +116,8 @@ function MyProfile() {
         return newDirection === "asc" ? dateA - dateB : dateB - dateA;
       } else if (column === "medianScore") {
         return newDirection === "asc"
-            ? a.medianScore - b.medianScore
-            : b.medianScore - a.medianScore;
+          ? a.medianScore - b.medianScore
+          : b.medianScore - a.medianScore;
       }
       return 0;
     });
@@ -205,31 +209,35 @@ function MyProfile() {
             <div className="session-table-container">
               <table className="table">
                 <thead>
-                <tr>
-                  <th
+                  <tr>
+                    <th
                       onClick={() => handleTableSort("date")}
-                      style={{cursor: "pointer"}}
-                  >
-                    Date {tableSort.column === "date" && (tableSort.direction === "asc" ? "↑" : "↓")}
-                  </th>
-                  <th
+                      style={{ cursor: "pointer" }}
+                    >
+                      Date{" "}
+                      {tableSort.column === "date" &&
+                        (tableSort.direction === "asc" ? "↑" : "↓")}
+                    </th>
+                    <th
                       onClick={() => handleTableSort("medianScore")}
-                      style={{cursor: "pointer"}}
-                  >
-                    Median Score {tableSort.column === "medianScore" && (tableSort.direction === "asc" ? "↑" : "↓")}
-                  </th>
-                </tr>
+                      style={{ cursor: "pointer" }}
+                    >
+                      Median Score{" "}
+                      {tableSort.column === "medianScore" &&
+                        (tableSort.direction === "asc" ? "↑" : "↓")}
+                    </th>
+                  </tr>
                 </thead>
                 <tbody>
-                {tableSessions &&
+                  {tableSessions &&
                     tableSessions.map((session) => (
-                        <tr
-                            key={session.id}
-                            onClick={() => handleSessionClick(session)}
-                        >
-                          <td>{new Date(session.date).toLocaleDateString()}</td>
-                          <td>{session.medianScore}</td>
-                        </tr>
+                      <tr
+                        key={session.id}
+                        onClick={() => handleSessionClick(session)}
+                      >
+                        <td>{new Date(session.date).toLocaleString()}</td>
+                        <td>{session.medianScore}</td>
+                      </tr>
                     ))}
                 </tbody>
               </table>
