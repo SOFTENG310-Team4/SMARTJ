@@ -48,6 +48,7 @@ const userSchema = new mongoose.Schema({
             {
               question: { type: String },  // The questions that are asked during the specific session
               answer: { type: String },    // The user's answers in response to the asked questions
+              likert: [],
             },
           ],
         },
@@ -269,6 +270,44 @@ app.post("/api/feedback", async (req, res) => {
       .json({ message: "An error occurred while saving feedback" });
   }
 });
+
+// Save Likert Feedback Endpoint
+app.post("/api/likertFeedback", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { questions, answers, likertData, duration, date } = req.body;
+
+    console.log(likertData);
+
+    const newLikertSession = {
+      id: new mongoose.Types.ObjectId().toString(),
+      date: new Date(date),
+      duration: parseInt(duration, 10),
+      questions: questions.split("\n").map((question, index) => ({
+        question,
+        answer: answers.split("\n")[index] || "",
+        likert: likertData[index],
+      })),
+    };
+
+    user.profile.analytics.sessions.push(newLikertSession);
+    await user.save();
+
+    res.status(200).json({ message: "Likert feedback saved successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "An error occurred while saving likert feedback" });
+  }
+});
+
 
 // Start the server on the specified port
 app.listen(PORT, () => {

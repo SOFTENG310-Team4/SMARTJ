@@ -88,6 +88,24 @@ export const saveFeedback = async (feedback, interviewData) => {
   return { message: "Feedback saved successfully" };
 };
 
+export const saveLikert = (likertData, interviewData) => {
+  const token = localStorage.getItem("token");
+  return fetch("http://localhost:5000/api/likertFeedback", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      questions: interviewData.questions,
+      answers: interviewData.answers,
+      likertData,
+      duration: interviewData.duration,
+      date: new Date().toISOString(),
+    }),
+  }).then((response) => response.json());
+};
+
 export const deleteProfile = async () => {
   const token = localStorage.getItem("token");
   const response = await fetch("http://localhost:5000/api/profile", {
