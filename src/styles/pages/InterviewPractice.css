@@ -63,7 +63,7 @@
 }
 
 .question-nav-btn {
-  border: 2px solid black;
+  border: 2px solid black !important;
 }
 /* Style for the textarea */
 
@@ -77,4 +77,3 @@
   gap: 1rem; /* Space between the countdown and the text area */
   margin-top: 2rem; /* Space between the title and this section */
 }
-

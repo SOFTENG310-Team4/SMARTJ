@@ -58,15 +58,7 @@ function InterviewPractice() {
     <div className="container text-center mt-5">
       <div className="row justify-content-center">
         {/* Left side: Display the interview question */}
-        <div
-          className="col-md-5 d-flex flex-column justify-content-center align-items-center p-4"
-          style={{
-            borderRadius: "10px",
-            minHeight: "400px",
-            backgroundColor: "#f8f9fa", // Light background for question section
-            border: "2px solid black", // Border for question section
-          }}
-        >
+        <div className="col-md-5 d-flex flex-column justify-content-center align-items-center p-4 interview-questions">
           <div className="question-section text-center">
             {/* Display the current question based on the type */}
             <QuestionComponent
@@ -78,22 +70,13 @@ function InterviewPractice() {
             {/* Button to move to the next question or finish */}
             {count < numQuestions - 1 ? (
               <button
-                style={{
-                  border: "2px solid black", // Border for button
-                }}
+                className="btn question-nav-btn btn-primary "
                 onClick={increment}
-                className="btn btn-primary"
               >
                 Next Question
               </button>
             ) : (
-              <button
-                style={{
-                  border: "2px solid black", // Border for button
-                }}
-                onClick={goToSummary}
-                className="btn btn-success"
-              >
+              <button onClick={goToSummary} className="btn btn-success">
                 Finish
               </button>
             )}
@@ -101,14 +84,7 @@ function InterviewPractice() {
         </div>
 
         {/* Right side: Display the answer component based on answer type */}
-        <div
-          className="col-md-5 p-4 ml-2"
-          style={{
-            borderRadius: "10px",
-            backgroundColor: "#ebecf0",
-            border: "2px solid black", // Border for answer section
-          }}
-        >
+        <div className="col-md-5 p-4 ml-2 answer-section">
           {answerType === "Text" ? (
             <TextAnswerComponent
               key={`text-${count}`} // Unique key to force re-render

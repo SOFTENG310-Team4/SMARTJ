@@ -113,7 +113,7 @@ const TextAnswerComponent = ({
     <div>
       {/* Display countdown timer and skip button if countdown is active */}
       {!isTyping && isCountdownActive && (
-        <div className="reading-time-container" style={{ fontSize: "18px" }}>
+        <div className="reading-time-container">
           {isCountdownActive && (
             <Countdown
               date={Date.now() + readingTime * 1000}
@@ -123,7 +123,8 @@ const TextAnswerComponent = ({
           {isCountdownActive && (
             <button
               onClick={startAnswering}
-              className="btn start-answering-btn">
+              className="btn start-answering-btn"
+            >
               Skip Reading Time
             </button>
           )}
@@ -154,7 +155,7 @@ const TextAnswerComponent = ({
         {!isCountdownActive && !isSubmitted && remainingTime > 0 && (
           <button
             onClick={submitAnswer}
-            className="btn btn-success me-2"
+            className="btn btn-success me-2 question-nav-btn"
           >
             Submit Answer
           </button>
