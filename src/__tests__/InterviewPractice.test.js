@@ -62,11 +62,14 @@ describe("InterviewPractice", () => {
     // Submit an answer
     fireEvent.click(screen.getByText("Submit Answer"));
 
-    // Click the "Finish" button
-    fireEvent.click(screen.getByText("Finish"));
+    // Use getAllByText to find all "Finish" buttons
+    const finishButtons = screen.getAllByText("Finish");
+
+    // Click the correct "Finish" button
+    fireEvent.click(finishButtons[0]);
 
     // Check if it navigated to the summary page
-    expect(screen.getByText("Mock Question")).toBeInTheDocument();
+    expect(screen.getByText("Loading feedback...")).toBeInTheDocument();
   });
 
   test("renders video recording component when answer type is 'Video'", () => {
@@ -103,10 +106,13 @@ describe("InterviewPractice", () => {
     // Submit the last answer
     fireEvent.click(screen.getByText("Submit Answer"));
 
-    // Click the "Finish" button
-    fireEvent.click(screen.getByText("Finish"));
+    // Use getAllByText to find all "Finish" buttons
+    const finishButtons = screen.getAllByText("Finish");
+
+    // Click the correct "Finish" button
+    fireEvent.click(finishButtons[0]);
 
     // Verify if it navigated to the summary
-    expect(screen.getByText("Mock Question")).toBeInTheDocument();
+    expect(screen.getByText("Loading feedback...")).toBeInTheDocument();
   });
 });

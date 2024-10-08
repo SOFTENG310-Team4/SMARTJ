@@ -16,6 +16,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import SummaryPage from "./pages/SummaryPage";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import ProfileSession from "./pages/ProfileSession";
 import { getProfile } from "./services/ProfileService"; // Import getProfile
 import { Buffer } from "buffer";
 
@@ -128,6 +129,7 @@ function App() {
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/my-profile" element={<MyProfile />} />
             <Route path="/summary" element={<SummaryPage />} />
+            <Route path="/ProfileSession" element={<ProfileSession />} />
           </Routes>
         </div>
 

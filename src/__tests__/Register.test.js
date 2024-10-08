@@ -4,9 +4,10 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
 import mongoose from "mongoose";
+import { registerUser } from "../services/ProfileService";
 
 jest.mock("../services/ProfileService", () => ({
-  registerUser: jest.fn().mockResolvedValue({}),
+  registerUser: jest.fn(),
 }));
 
 describe("Register", () => {
@@ -33,6 +34,10 @@ describe("Register", () => {
     );
   };
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   test("renders registration form correctly", () => {
     setup();
     expect(screen.getByLabelText("Name")).toBeInTheDocument();
@@ -41,6 +46,10 @@ describe("Register", () => {
   });
 
   test("registers a new user", async () => {
+    registerUser.mockResolvedValueOnce({
+      message: "User created successfully",
+    });
+
     setup();
     fireEvent.change(screen.getByLabelText("Name"), {
       target: { value: "Test User" },
@@ -56,8 +65,40 @@ describe("Register", () => {
       fireEvent.click(screen.getByRole("button", { name: "Register" }));
     });
 
-    expect(
-      await screen.findByRole("button", { name: "Login" })
-    ).toBeInTheDocument();
+    expect(registerUser).toHaveBeenCalledWith({
+      email: "test@example.com",
+      password: "password123",
+      name: "Test User",
+    });
+    expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
+  });
+
+  test("shows an error message when registration fails", async () => {
+    registerUser.mockResolvedValueOnce({
+      message: "Same email already in use",
+    });
+    jest.spyOn(window, "alert").mockImplementation(() => {});
+
+    setup();
+    fireEvent.change(screen.getByLabelText("Name"), {
+      target: { value: "Test User" },
+    });
+    fireEvent.change(screen.getByLabelText("Email address"), {
+      target: { value: "a@a.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "password123" },
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole("button", { name: "Register" }));
+    });
+
+    expect(registerUser).toHaveBeenCalledWith({
+      email: "a@a.com",
+      password: "password123",
+      name: "Test User",
+    });
+    expect(window.alert).toHaveBeenCalledWith("Same email already in use");
   });
 });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import QuestionComponent from "../components/QuestionComponent";
 import VideoRecordingComponent from "../components/VideoRecordingComponent";
@@ -25,25 +25,30 @@ function InterviewPractice() {
   const [textAnswerDuration, setTextAnswerDuration] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(""); // State for the current question
 
+  // State to store the start time of the interview
+  const [startTime, setStartTime] = useState(null);
+
+  useEffect(() => {
+    setStartTime(Date.now());
+  }, []);
+
+  // Calculate the total duration of the interview, including reading time and answer time
+  const totalDuration = Math.floor((Date.now() - startTime) / 1000);
+
   // Function to navigate to the summary page with collected data
   function goToSummary(updatedQuestions) {
-    const duration =
-      answerType === "Text"
-        ? textAnswerDuration
-        : timeLimit - recordedChunks.length;
+    // Concatenate answers and questions
+    const concatenatedAnswers = textAnswers.join("\n");
+    const concatenatedQuestions = updatedQuestions.join("\n");
 
-   // Concatenate answers and questions
-   const concatenatedAnswers = textAnswers.join("\n");
-   const concatenatedQuestions = updatedQuestions.join("\n");
-
-   navigate("/summary", {
-     state: {
-       questions: concatenatedQuestions,
-       answers: concatenatedAnswers,
-       duration: duration,
-       date: new Date().toLocaleDateString(),
-     },
-   });
+    navigate("/summary", {
+      state: {
+        questions: concatenatedQuestions,
+        answers: concatenatedAnswers,
+        duration: totalDuration,
+        date: new Date().toLocaleDateString(),
+      },
+    });
   }
 
   // Handler for submitting text answers
@@ -67,7 +72,7 @@ function InterviewPractice() {
     const updatedQuestions = [...questions, currentQuestion];
     goToSummary(updatedQuestions);
   };
-  
+
   return (
     <div className="container text-center mt-5">
       <div className="row justify-content-center">

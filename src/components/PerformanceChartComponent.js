@@ -3,9 +3,12 @@ import { Line } from "react-chartjs-2";
 import "chart.js/auto";
 
 function PerformanceChart({ sessions }) {
+  // sort the sessions by ascending date
+  sessions = sessions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
   const chartData = {
     labels: sessions
-      ? sessions.map((session) => new Date(session.date).toLocaleDateString())
+      ? sessions.map((session) => new Date(session.date).toLocaleString())
       : [],
     datasets: [
       {
