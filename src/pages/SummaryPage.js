@@ -141,8 +141,9 @@ const SummaryPage = () => {
   };
 
   const handleLikertSubmit = () => {
-    if (allLikertFilled()) {
+    if (allLikertFilled() && localStorage.getItem("token")) {
       saveLikert(likertValues, interviewData);
+      console.log(likertValues);
     } else {
       alert("Please fill out all the likert scale questions.");
     }
