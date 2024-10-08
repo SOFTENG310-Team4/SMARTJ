@@ -108,7 +108,6 @@ function InterviewSettings() {
 
 
         {/* Button to start the interview with the selected settings */}
-        <button className="interview-button">
           <Link
             to={`/interview-practice?questionType=${encodeURIComponent(
               questionType
@@ -116,9 +115,8 @@ function InterviewSettings() {
               answerType
             )}`}
           >
-            Start Interview
+            <button className="interview-button">Start interview</button>
           </Link>
-        </button>
       </div>
     </div>
   );
