@@ -164,7 +164,7 @@ const SummaryPage = () => {
                   <LikertScaleComponent
                     key={questionIndex}
                     question={question}
-                    name={`likert-${videoIndex}-${questionIndex}`}
+                    groupName={`likert-${videoIndex}-${questionIndex}`}
                     setAnswer={(value) =>
                       changeLikert(videoIndex, questionIndex, value)
                     }

@@ -1,8 +1,9 @@
 import React from 'react';
 import '../LikertScaleComponent.css';
 
-const LikertScaleComponent = ({ question, setAnswer }) => {
-  const likertOptions = [
+const LikertScaleComponent = ({ question, setAnswer, groupName }) => {
+  // setting the likert scale options
+    const likertOptions = [
     { value: 1, text: "Strongly Disagree" },
     { value: 2, text: "Disagree" },
     { value: 3, text: "Neutral" },
@@ -19,7 +20,7 @@ const LikertScaleComponent = ({ question, setAnswer }) => {
             <span className="likert-label-text">{option.text}</span>
             <input
               type="radio"
-              name={`likert-${question}`}
+              name={groupName}
               value={option.value}
               onChange={() => setAnswer(option.value)}
               className="likert-radio"
