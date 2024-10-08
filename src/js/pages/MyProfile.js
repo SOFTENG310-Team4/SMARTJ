@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { getProfile, logout, updateProfile } from "../services/ProfileService";
+import {
+  getProfile,
+  logout,
+  updateProfile,
+  deleteProfile,
+} from "../services/ProfileService";
 import { useNavigate } from "react-router-dom";
 import { Buffer } from "buffer";
 import PerformanceChart from "../components/PerformanceChartComponent";
@@ -8,6 +13,7 @@ function MyProfile() {
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -31,12 +37,24 @@ function MyProfile() {
     setProfilePicture(e.target.files[0]);
   };
 
+  const handleDelete = async () => {
+    await deleteProfile();
+    handleLogout();
+  };
+
+  const confirmDelete = () => {
+    setShowDeleteConfirmation(true);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteConfirmation(false);
+  };
+
   useEffect(() => {
     const fetchProfile = async () => {
       const profile = await getProfile();
       setProfile(profile);
     };
-
     fetchProfile();
   }, []);
 
@@ -51,7 +69,7 @@ function MyProfile() {
     : "images/blank-profile-picture.png";
 
   const handleSessionClick = (session) => {
-    navigate(`/session/${session.id}`, { state: { session } });
+    navigate(`/ProfileSession`, { state: { session } });
   };
 
   return (
@@ -90,6 +108,15 @@ function MyProfile() {
           <button className="btn btn-primary mt-3" onClick={handleSave}>
             Save
           </button>
+          <button
+            className="btn btn-danger mt-3"
+            onClick={() => setIsEditing(false)}
+          >
+            Cancel
+          </button>
+          <button className="btn btn-danger mt-3" onClick={confirmDelete}>
+            Delete Profile
+          </button>
         </div>
       ) : (
         <div>
@@ -107,32 +134,54 @@ function MyProfile() {
             </button>
           </div>
 
-          <PerformanceChart sessions={profile.analytics.sessions} />
+          {profile.analytics.sessions && profile.analytics.sessions.length > 1 ? (
+              <PerformanceChart sessions={profile.analytics.sessions} />
+            ) : (
+                <p>No performance data available.</p>
+          )}
 
           <div className="mt-5">
             <h3>Sessions</h3>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Median Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {profile.analytics.sessions &&
-                  profile.analytics.sessions.map((session) => (
-                    <tr
-                      key={session.id}
-                      onClick={() => handleSessionClick(session)}
-                    >
-                      <td>{new Date(session.date).toLocaleDateString()}</td>
-                      <td>{session.medianScore}</td>
+            <div className="session-table-container">
+              {profile.analytics.sessions && profile.analytics.sessions.length > 1 ? (
+                  <table className="table">
+                    <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Median Score</th>
                     </tr>
-                  ))}
-              </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {profile.analytics.sessions
+                        .sort((a, b) => new Date(b.date) - new Date(a.date))
+                        .map((session) => (
+                            <tr
+                                key={session.id}
+                                onClick={() => handleSessionClick(session)}
+                            >
+                              <td>{new Date(session.date).toLocaleString()}</td>
+                              <td>{session.medianScore}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                  </table>
+              ) : (
+                  <p>No sessions available.</p>
+              )}
+            </div>
           </div>
         </div>
+      )}
+      {showDeleteConfirmation && (
+          <div className="delete-confirmation">
+            <p>Are you sure you want to delete your profile?</p>
+            <button className="btn btn-danger" onClick={handleDelete}>
+              Yes
+            </button>
+            <button className="btn btn-secondary" onClick={cancelDelete}>
+              No
+            </button>
+          </div>
       )}
     </div>
   );
