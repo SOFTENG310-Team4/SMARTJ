@@ -49,6 +49,7 @@ SMARTJ is built using a modern web development stack. Here are the key technolog
 - [Npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (Node Package Manager) for installing packages from npm registry<br />
   Downloading Node.js should automatically install npm for you
 - [MongoDB](https://www.mongodb.com/try/download/community) For running a database that will keep track of user data <br/> Recommended version: v8.0.0 <br/>
+- [OpenAI API Key](https://openai.com/index/openai-api/) For running the ChatGPT grading. You will need to sign up, add balance if needed and generate a secret key for use as an environment variable.
 
 ### Installation
 
