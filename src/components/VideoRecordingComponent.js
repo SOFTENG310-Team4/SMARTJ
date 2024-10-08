@@ -75,7 +75,7 @@ const VideoRecordingComponent = ({
                 stopRecording();
                 setAreCameraAndMicAvailable(false);
               });
-          } catch { }
+          } catch {}
 
           return newTime;
         });
@@ -164,27 +164,42 @@ const VideoRecordingComponent = ({
       const date = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
       const defaultName = `recording-${date}.webm`;
 
-      try {
-        // Use the File System Access API to ask the user where they want the recording saved
-        const options = {
-          suggestedName: defaultName,
-          types: [{
-            description: 'WebM Video',
-            accept: {
-              'video/webm': ['.webm'],
-            },
-          }],
-        };
+      if (window.showSaveFilePicker) {
+        try {
+          // Use the File System Access API to ask the user where they want the recording saved
+          const options = {
+            suggestedName: defaultName,
+            types: [
+              {
+                description: "WebM Video",
+                accept: {
+                  "video/webm": [".webm"],
+                },
+              },
+            ],
+          };
 
-        const fileHandle = await window.showSaveFilePicker(options);
-        const writableStream = await fileHandle.createWritable();
+          const fileHandle = await window.showSaveFilePicker(options);
+          const writableStream = await fileHandle.createWritable();
 
-        // Write the recording blob to the file
-        await writableStream.write(blob);
-        await writableStream.close();
-      } catch (error) {
-        console.error('Error saving file:', error);
-        alert('Recording failed to save. Please try again.');
+          // Write the recording blob to the file
+          await writableStream.write(blob);
+          await writableStream.close();
+        } catch (error) {
+          console.error("Error saving file:", error);
+          alert("Recording failed to save. Please try again.");
+        }
+      } else {
+        // Fallback for browsers that do not support showSaveFilePicker
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = defaultName;
+        document.body.appendChild(a);
+        a.click();
+        URL.revokeObjectURL(url);
+        document.body.removeChild(a);
       }
     }
   }
@@ -275,28 +290,26 @@ const VideoRecordingComponent = ({
           Stop Recording
         </button>
 
-        {recordedChunks.length > 0 &&
-          !isRecording &&
-          !isCountdownActive && (
-            <>
-              {!isReplay && (
-                <button
-                  style={{ borderColor: "black" }}
-                  onClick={replayRecording}
-                  className="btn btn-primary me-2"
-                >
-                  Replay Recording
-                </button>
-              )}
+        {recordedChunks.length > 0 && !isRecording && !isCountdownActive && (
+          <>
+            {!isReplay && (
               <button
                 style={{ borderColor: "black" }}
-                onClick={saveRecording}
+                onClick={replayRecording}
                 className="btn btn-primary me-2"
               >
-                Save Recording
+                Replay Recording
               </button>
-            </>
-          )}
+            )}
+            <button
+              style={{ borderColor: "black" }}
+              onClick={saveRecording}
+              className="btn btn-primary me-2"
+            >
+              Save Recording
+            </button>
+          </>
+        )}
       </div>
     </div>
   );
