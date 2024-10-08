@@ -205,12 +205,11 @@ const SummaryPage = () => {
       {setContent()}
 
       <div className="d-flex flex-column justify-content-center align-items-center">
-        <h5 className="mb-4">Questions and Answers:</h5>
         <table className="table table-bordered">
           <thead>
             <tr>
-              <th>Question</th>
-              <th>Answer</th>
+              <th className={"table-heading"}>Question</th>
+              <th className={"table-heading"}>Answer</th>
             </tr>
           </thead>
           <tbody>
@@ -222,8 +221,8 @@ const SummaryPage = () => {
             ))}
           </tbody>
         </table>
-        <h5 className="mb-4">Duration: {interviewData.duration} seconds</h5>
-        <h5 className="mb-4">Date: {interviewData.date}</h5>
+        <h5 className="mb-2 summary-detail-text">Duration: {interviewData.duration} seconds</h5>
+        <h5 className="mb-4 summary-detail-text">Date: {interviewData.date}</h5>
 
         <div className="mt-2">
           <button className="summary-button" onClick={startNewInterview}>

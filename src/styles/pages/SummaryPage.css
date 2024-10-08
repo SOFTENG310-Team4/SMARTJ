@@ -20,6 +20,7 @@
     color: #fff;
     font-weight: bold;
     margin-right: 1rem;
+    margin-bottom: 3rem;
 }
 
 .summary-button:hover {
@@ -36,4 +37,45 @@
 
 .summary-button-secondary:hover {
     background-color: #C7C4FF !important;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.table-heading {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+.summary-detail-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.alert {
+    background-color: #DDDBFF !important;
+    border: 1px solid #bDbBdF !important;
+    color: #000 !important;
+}
+
+.alert > * {
+    color: #000 !important;
+}
+
+@media(max-width: 991.98px) {
+    .summary-button {
+        width: 170px;
+        font-size: 1rem;
+    }
+
+    .summary-button-secondary {
+        width: 110px !important;
+    }
 }
