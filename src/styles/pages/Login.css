@@ -64,6 +64,16 @@
     margin: auto 0;
 }
 
+.login-home > * {
+    font-family: 'Inter', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 2.5rem;
+    color: #212529;
+    margin-left: 6rem;
+    margin-top: 1.3rem;
+}
+
 @media (max-width: 991.98px) {
     .login-image {
         display: none;
@@ -84,10 +94,5 @@
 
     .login-existing-text {
         text-align: center;
-    }
-
-    .nav-text {
-        margin-left: 7rem;
-        margin-top: 2rem;
     }
 }

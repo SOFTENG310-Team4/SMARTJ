@@ -97,9 +97,9 @@ function App() {
           <div
               className="text-center p-3 copyright-section"
           >
-            {/* Footer copyright information */}© 2024 Copyright:
+            {/* Footer copyright information */}© 2024 Copyright:{" "}
             <a
-              className="text-black"
+              className="text-white text-decoration-none"
               href="https://github.com/SOFTENG310-Team4/SMARTJ/"
             >
               SMARTJ.co.nz

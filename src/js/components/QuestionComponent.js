@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
+import "../../styles/components/QuestionComponent.css";
 
 // Fetch questions from the specified endpoint based on question type
 const fetchQuestions = async (type) => {
@@ -36,13 +37,7 @@ const QuestionComponent = ({ questionType, onQuestionFetched }) => {
 
   return (
     <div className="question-container">
-      <div className="question">
-        <h2>{question}</h2> {/* Display the current question */}
-      </div>
-      <div className="answer">
-        {/* Render the answer part based on settings */}
-        {/* Placeholder for the answer component */}
-      </div>
+      <h2>{question}</h2> {/* Display the current question */}
     </div>
   );
 };

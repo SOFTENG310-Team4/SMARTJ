@@ -1,76 +1,63 @@
+button {
+  user-select: none;
+}
+
+.interview-container {
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  margin-top: 2rem;
+  width: 50%;
+}
+
+.interview-container > * {
+  min-width: 100%;
+}
+
 .container {
-  text-align: center;
-  margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 2rem;
 }
 
-.display-4 {
-  font-size: 2.5rem;
-}
-
-.lead {
-  font-size: 1.25rem;
-}
-
-.timer-text h2 {
-  color: black;
-}
-
-.video-container {
-  position: relative;
-  width: 100%;
-  max-width: 600px;
-  margin: auto;
-}
-
-.video-container video {
-  width: 100%;
-}
-
-.overlay-text {
-  position: absolute;
-  top: 350px;
-  left: 707px;
-  color: red;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  border-radius: 5px;
-  font-size: 30px;
-}
-.button-container {
-  min-height: 60px;
-}
-.btn {
-  margin: 10px;
-}
-
-.timer-text {
-  min-height: 40px;
-}
-
-.interview-questions {
-  border-radius: 10px;
-  min-height: 400px;
-  background-color: #f8f9fa; /* Light background for question section */
-  border: 2px solid black; /* Border for question section */
-}
-
-.answer-section {
-  border-radius: 10px;
-  background-color: #ebecf0;
-  border: 2px solid black;
+.interview-skip-container {
+  width: 50%;
+  display: flex;
+  justify-content: left;
+  margin-top: 4rem;
 }
 
 .question-nav-btn {
-  border: 2px solid black;
+  padding: 10px 35px;
+  font-weight: 500;
+  font-size: 1rem;
+  background-color: #DDDBFF;
+  border-radius: 15px;
+  border: none;
+  border-bottom: 6px solid #bDbBdF;
+  color: #000;
 }
 
-/* Style for the textarea */
-.form-control {
-  flex-grow: 1; /* Allow the text area to grow and take available space */
+.question-nav-btn:hover {
+  background-color: #C7C4FF;
+  border-bottom-width: 4px;
+  transform: translateY(1px);
 }
-.text-input-container {
-  display: flex; /* Align children side by side */
-  align-items: flex-start; /* Align items at the start */
-  gap: 1rem; /* Space between the countdown and the text area */
-  margin-top: 2rem; /* Space between the title and this section */
+
+.question-nav-btn:active {
+  transform: translateY(2px);
+}
+
+@media (max-width: 991.98px) {
+    .interview-container {
+        width: 100%;
+    }
+
+    .interview-skip-container {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
 }

@@ -44,7 +44,7 @@ function Login() {
       try {
         await loginUser({ email, password });
         if (localStorage.getItem("token")) {
-          navigate("/my-profile");
+          navigate("/");
           window.location.reload();
         }
       } catch (error) {
@@ -63,7 +63,7 @@ function Login() {
   return (
       <>
         <Link className="login-home" to="/">
-          <h1 className="nav-text">SMARTJ</h1>
+          <h1>SMARTJ</h1>
         </Link>
         <div className="login-container">
           <div className="mt-5 login-form-container">

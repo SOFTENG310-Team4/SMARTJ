@@ -37,7 +37,7 @@ function InterviewSettings() {
     <div className="container text-center mt-5">
       <h1 className="interview-heading">Interview Settings</h1>
 
-      <div className="settings mt-4">
+      <div className="settings mt-3 mb-3">
         {/* Section for setting number of questions */}
         <div className="setting">
           <h4>Number of Questions: <span className="setting-value">{numQuestions}</span></h4>

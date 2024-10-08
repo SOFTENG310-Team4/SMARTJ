@@ -21,9 +21,16 @@ const Navbar = () => {
         setProfile(profileData);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        setIsAuthenticated(false);
+        setProfile(null);
+        window.location.reload();
+    }
+
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light">
+        <nav className="navbar navbar-expand-lg">
             {/* Menu toggle for smaller screen sizes*/}
             <button
                 className="navbar-toggle"
@@ -63,7 +70,7 @@ const Navbar = () => {
                 </ul>
             </div>
 
-            <div className="sm:hidden">
+            <div>
                 {isAuthenticated ? (
                     <div className="nav-item">
                         <Link className="nav-link" to="/my-profile">
@@ -78,11 +85,26 @@ const Navbar = () => {
                                     className="profile-picture-nav"
                                 />
                             ) : (
-                                "My Profile"
+                                ""
                             )}
                         </Link>
                     </div>
                 ) : (<> </>)}
+            </div>
+            <div>
+                {isAuthenticated ? (
+                    <div className="nav-item">
+                        <Link className="nav-login" onClick={handleLogout}>
+                            Logout
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="nav-item">
+                        <Link className="nav-login" to="/login">
+                            Login
+                        </Link>
+                    </div>
+                )}
             </div>
         </nav>
     );

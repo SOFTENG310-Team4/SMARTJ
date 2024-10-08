@@ -48,7 +48,7 @@ function Register() {
   return (
       <>
         <Link className="register-home" to="/">
-          <h1 className="nav-text">SMARTJ</h1>
+          <h1>SMARTJ</h1>
         </Link>
         <div className="register-container">
           <div className="mt-5 register-form-container">

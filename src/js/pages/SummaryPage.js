@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { saveFeedback } from "../services/ProfileService";
+import "../../styles/pages/SummaryPage.css";
 
 const SummaryPage = () => {
   // Hook to access the current location object, which contains state from the previous page
@@ -26,7 +27,7 @@ const SummaryPage = () => {
     const feedbackFeched = localStorage.getItem("feedbackFetched");
     // Call getFeedback to fetch feedback immediately
     if (!feedbackFeched) {
-      getFeedback(interviewData.answers);
+      getFeedback()
       localStorage.setItem("feedbackFetched", true);
     }
 
@@ -34,8 +35,6 @@ const SummaryPage = () => {
       localStorage.removeItem("feedbackFetched");
     };
   }, [interviewData.answers]); // Dependency array ensures this runs only when answers change
-
-  console.log(interviewData);
 
   const startNewInterview = () => {
     navigate("/interview-settings");
@@ -119,7 +118,7 @@ const SummaryPage = () => {
 
   return (
     <div className="container mt-5">
-      <h1 className="display-4 text-center mb-5">Interview Summary</h1>
+      <h1 className="summary-heading">Interview Summary</h1>
 
       {loading ? (
         <div className="alert alert-info mt-3" role="alert">

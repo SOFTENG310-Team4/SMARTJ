@@ -51,6 +51,7 @@
 }
 
 .setting {
+    min-width: 100%;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column;
@@ -88,7 +89,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 select {
-    min-width: 70%;
+    min-width: 100%;
     padding: 8px;
     border: 2px solid #ddd;
     border-radius: 15px;

@@ -74,65 +74,66 @@ function InterviewPractice() {
   };
 
   return (
-    <div className="container text-center mt-5">
-      <div className="row justify-content-center">
-        {/* Left side: Display the interview question */}
-        <div
-            className="col-md-5 d-flex flex-column justify-content-center align-items-center p-4 interview-questions"
-        >
-          <div className="question-section text-center">
-            {/* Display the current question */}
-            <QuestionComponent
-              key={`${questionType}-${count}`} // Unique key to force re-render
-              questionType={questionType}
-              onQuestionFetched={setCurrentQuestion} // Pass the function to set the current question
-            />
+      <div className="container mt-5">
+        <div className="interview-container">
+          {/* Left side: Display the interview question */}
+          <div
+              className="interview-questions"
+          >
+            <div>
+              {/* Display the current question */}
+              <QuestionComponent
+                  key={`${questionType}-${count}`} // Unique key to force re-render
+                  questionType={questionType}
+                  onQuestionFetched={setCurrentQuestion} // Pass the function to set the current question
+              />
+            </div>
           </div>
-          <div className="button-container mt-4">
-            {/* Button to move to the next question or finish */}
-            {count < numQuestions - 1 ? (
-              <button
-                onClick={increment}
-                className="btn btn-primary question-nav-btn"
-              >
-                Next Question
-              </button>
+
+          {/* Right side: Display the answer component based on answer type */}
+          <div
+              className="answer-section"
+          >
+            {answerType === "Text" ? (
+                <TextAnswerComponent
+                    key={`text-${count}`} // Unique key to force re-render
+                    readingTime={readingTime}
+                    timeLimit={timeLimit}
+                    onSubmit={handleTextSubmit}
+                    goNextPage={increment}
+                    goToSummary={goToSummary}
+                />
             ) : (
-              <button
-                onClick={finishInterview}
-                className="btn btn-success question-nav-btn"
-              >
-                Finish
-              </button>
+                <VideoRecordingComponent
+                    key={`video-${count}`} // Unique key to force re-render
+                    readingTime={readingTime}
+                    timeLimit={timeLimit}
+                    setRecordedChunks={setRecordedChunks}
+                    recordedChunks={recordedChunks}
+                    goToSummary={goToSummary}
+                />
             )}
           </div>
         </div>
-
-        {/* Right side: Display the answer component based on answer type */}
-        <div
-            className="col-md-5 p-4 ml-2 answer-section"
-        >
-          {answerType === "Text" ? (
-            <TextAnswerComponent
-              key={`text-${count}`} // Unique key to force re-render
-              readingTime={readingTime}
-              timeLimit={timeLimit}
-              onSubmit={handleTextSubmit}
-              goToSummary={goToSummary}
-            />
+        <div className="interview-skip-container">
+          {/* Button to move to the next question or finish */}
+          {count < numQuestions - 1 ? (
+              <button
+                  onClick={increment}
+                  className="question-nav-btn"
+              >
+                Skip Question
+              </button>
           ) : (
-            <VideoRecordingComponent
-              key={`video-${count}`} // Unique key to force re-render
-              readingTime={readingTime}
-              timeLimit={timeLimit}
-              setRecordedChunks={setRecordedChunks}
-              recordedChunks={recordedChunks}
-              goToSummary={goToSummary}
-            />
+              <button
+                  onClick={finishInterview}
+                  className="question-nav-btn"
+              >
+                Finish
+              </button>
           )}
         </div>
       </div>
-    </div>
   );
 }
 
