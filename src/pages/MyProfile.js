@@ -8,6 +8,8 @@ function MyProfile() {
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
+  const [sortedSessions, setSortedSessions] = useState([]);
+  const [sortConfig, setSortConfig] = useState({ key: "date", direction: "ascending" });
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -35,10 +37,43 @@ function MyProfile() {
     const fetchProfile = async () => {
       const profile = await getProfile();
       setProfile(profile);
+      setSortedSessions(profile.analytics.sessions || []);
     };
 
     fetchProfile();
   }, []);
+
+  useEffect(() => {
+    if (profile && profile.analytics.sessions) {
+      let sortableSessions = [...profile.analytics.sessions];
+
+      // Sorting logic based on the key and direction
+      sortableSessions.sort((a, b) => {
+        if (sortConfig.key === "date") {
+          const dateA = new Date(a.date);
+          const dateB = new Date(b.date);
+          return sortConfig.direction === "ascending"
+              ? dateA - dateB
+              : dateB - dateA;
+        } else if (sortConfig.key === "medianScore") {
+          return sortConfig.direction === "ascending"
+              ? a.medianScore - b.medianScore
+              : b.medianScore - a.medianScore;
+        }
+        return 0;
+      });
+
+      setSortedSessions(sortableSessions);
+    }
+  }, [sortConfig, profile]);
+
+  const handleSort = (key) => {
+    let direction = "ascending";
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
+      direction = "descending";
+    }
+    setSortConfig({ key, direction });
+  };
 
   if (!profile) {
     return <div>Loading...</div>;
@@ -107,27 +142,32 @@ function MyProfile() {
             </button>
           </div>
 
-          <PerformanceChart sessions={profile.analytics.sessions} />
+          <PerformanceChart sessions={sortedSessions} />
 
           <div className="mt-5">
             <h3>Sessions</h3>
             <table className="table">
               <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Median Score</th>
-                </tr>
+              <tr>
+                <th onClick={() => handleSort("date")}>
+                  Date {sortConfig.key === "date" ? (sortConfig.direction === "ascending" ? "↑" : "↓") : ""}
+                </th>
+                <th onClick={() => handleSort("medianScore")}>
+                  Median
+                  Score {sortConfig.key === "medianScore" ? (sortConfig.direction === "ascending" ? "↑" : "↓") : ""}
+                </th>
+              </tr>
               </thead>
               <tbody>
-                {profile.analytics.sessions &&
-                  profile.analytics.sessions.map((session) => (
-                    <tr
-                      key={session.id}
-                      onClick={() => handleSessionClick(session)}
-                    >
-                      <td>{new Date(session.date).toLocaleDateString()}</td>
-                      <td>{session.medianScore}</td>
-                    </tr>
+              {sortedSessions &&
+                  sortedSessions.map((session) => (
+                      <tr
+                          key={session.id}
+                          onClick={() => handleSessionClick(session)}
+                      >
+                        <td>{new Date(session.date).toLocaleDateString()}</td>
+                        <td>{session.medianScore}</td>
+                      </tr>
                   ))}
               </tbody>
             </table>
