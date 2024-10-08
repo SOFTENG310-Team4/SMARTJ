@@ -125,9 +125,9 @@ const SummaryPage = () => {
 
   // Making array to set likert scale questions
   const likertQuestions = [
-    'My answer directly addressed the question asked.',
-    'My answer was concise and to the point.',
-    'I demonstrated my skills and experience in my answer.',
+    "My answer directly addressed the question asked.",
+    "My answer was concise and to the point.",
+    "I demonstrated my skills and experience in my answer.",
   ];
 
   const changeLikert = (videoIndex, questionIndex, value) => {
@@ -147,7 +147,10 @@ const SummaryPage = () => {
   const handleLikertSubmit = () => {
     if (allLikertFilled() && localStorage.getItem("token")) {
       saveLikert(likertValues, interviewData);
+      navigate("/my-profile");
       console.log(likertValues);
+    } else if (!localStorage.getItem("token")) {
+      alert("Please log in to submit feedback.");
     } else {
       alert("Please fill out all the likert scale questions.");
     }
@@ -162,14 +165,8 @@ const SummaryPage = () => {
       ) : (
         feedback && (
           <div className="alert alert-info mt-3" role="alert">
-            <strong>Loading feedback...</strong>
+            <strong>Feedback:</strong> {feedback}
           </div>
-        ) : (
-          feedback && (
-            <div className="alert alert-info mt-3" role="alert">
-              <strong>Feedback:</strong> {feedback}
-            </div>
-          )
         )
       );
     } else {
