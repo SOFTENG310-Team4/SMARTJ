@@ -9,10 +9,12 @@ function Register() {
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
   const navigate = useNavigate();
 
+  // Function to handle validation of form input
   const validate = () => {
     let valid = true;
     let errors = { name: "", email: "", password: "" };
 
+    // Check for if the fields name, email, or password are empty
     if (!name) {
       errors.name = "Invalid name";
       valid = false;
@@ -30,6 +32,7 @@ function Register() {
     return valid;
   };
 
+  // Handles validation of form submission
   const handleRegister = async (e) => {
     e.preventDefault();
     if (validate()) {
@@ -44,6 +47,7 @@ function Register() {
     }
   };
 
+  // JSX Structure of the registration form
   return (
     <div className="container text-center mt-5">
       <h1 className="display-4 text-center mb-5">Register</h1>
