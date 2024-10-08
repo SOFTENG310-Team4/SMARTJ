@@ -23,7 +23,7 @@ const Navbar = () => {
 
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <nav className="navbar navbar-expand-lg navbar-light">
             {/* Menu toggle for smaller screen sizes*/}
             <button
                 className="navbar-toggle"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { loginUser } from "../services/ProfileService";
-import { useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import "../../styles/pages/Login.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -60,53 +61,65 @@ function Login() {
   };
 
   return (
-    <div className="container text-center mt-5">
-      <h1 className="display-4 text-center mb-5">Login</h1>
-
-      <form onSubmit={handleLogin}>
-        <div className="mb-3">
-          <label htmlFor="email" className="form-label">
-            Email address
-          </label>
-          <input
-            type="email"
-            className={`form-control ${errors.email ? "is-invalid" : ""}`}
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {errors.email && (
-            <div className="invalid-feedback">{errors.email}</div>
-          )}
-        </div>
-        <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Password
-          </label>
-          <input
-            type="password"
-            className={`form-control ${errors.password ? "is-invalid" : ""}`}
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {errors.password && (
-            <div className="invalid-feedback">{errors.password}</div>
-          )}
-        </div>
-        {errors.general && (
-          <div className="alert alert-danger" role="alert">
-            {errors.general}
+      <>
+        <Link className="login-home" to="/">
+          <h1 className="nav-text">SMARTJ</h1>
+        </Link>
+        <div className="login-container">
+          <div className="mt-5 login-form-container">
+            <form onSubmit={handleLogin} className="login-form">
+              <h1 className="login-header">Sign in</h1>
+              <div className="mb-3">
+                <label htmlFor="email" className="form-label">
+                  Email address
+                </label>
+                <input
+                    type="email"
+                    className={`form-control ${errors.email ? "is-invalid" : ""} login-input`}
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                />
+                {errors.email && (
+                    <div className="invalid-feedback">{errors.email}</div>
+                )}
+              </div>
+              <div className="mb-3">
+                <label htmlFor="password" className="form-label">
+                  Password
+                </label>
+                <input
+                    type="password"
+                    className={`form-control ${errors.password ? "is-invalid" : ""} login-input`}
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                {errors.password && (
+                    <div className="invalid-feedback">{errors.password}</div>
+                )}
+              </div>
+              {errors.general && (
+                  <div className="alert alert-danger" role="alert">
+                    {errors.general}
+                  </div>
+              )}
+              <button type="submit" className="login-button">
+                Sign in
+              </button>
+            </form>
+            <div className="register-existing-text">
+              <p className="mt-3">
+                Don't have an account?{" "}
+                <a href="/register" className="text-primary">
+                  Sign up
+                </a>
+              </p>
+            </div>
           </div>
-        )}
-        <button type="submit" className="btn btn-primary">
-          Login
-        </button>
-      </form>
-      <button className="btn btn-primary" onClick={handleRegister}>
-        Register
-      </button>
-    </div>
+          <img src="images/interview_practice.png" className="login-image"/>
+        </div>
+      </>
   );
 }
 

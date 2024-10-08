@@ -1,5 +1,5 @@
 .navbar {
-    border-bottom: 1px solid #DDDBFF;
+    background-color: #fff !important;
 }
 
 .nav-text {
@@ -36,6 +36,13 @@
     display: none;
 }
 
+.nav-link {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200 !important;
+    font-size: 1.1rem !important;
+    color: #212529 !important;
+}
+
 
 /* Center the nav links when the menu is collapsed */
 @media (max-width: 991.98px) {
@@ -61,6 +68,13 @@
     .navbar-toggle {
         display: block;
     }
+
+    .nav-text {
+        font-size: 2rem;
+        position: absolute;
+        transform: translate(-70%, -40%);
+
+    }
 }
 
 @media (min-width: 991.98px) {
@@ -71,18 +85,18 @@
     }
 
     .nav-text {
-        font-size: 3.5rem;
-        margin-left: 2rem;
+        font-size: 2.5rem;
+        margin-left: 5rem;
     }
 
     .navbar-nav {
         margin-left: 1rem;
         font-family: 'Inter', sans-serif;
-        font-size: 1.4rem;
+        font-size: 1.2rem;
         font-weight: bold;
     }
 
     .navbar-nav > * {
-        margin-left: 1rem;
+        margin-left: 3rem;
     }
 }

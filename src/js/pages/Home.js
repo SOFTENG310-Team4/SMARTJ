@@ -38,7 +38,7 @@ function Home() {
                                   </Link>
                               </div>
                               <div>
-                                  <Link to="/login" className="primary-btn">
+                                  <Link to="/job-finder" className="primary-btn">
                                       Go To Job Finder
                                   </Link>
                               </div>

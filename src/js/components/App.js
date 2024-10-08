@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import "../../styles/components/App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
@@ -20,11 +20,11 @@ import { Buffer } from "buffer";
 import Navbar from "./Navbar";
 
 function App() {
+  const location = useLocation();
 
   return (
-    <Router>
       <div className="d-flex flex-column min-vh-100">
-        <Navbar />
+        {(location.pathname !== "/register" && location.pathname !== "/login") && <Navbar />}
 
         {/* Main content area that renders the routes */}
         <div className="flex-grow-1">
@@ -107,7 +107,6 @@ function App() {
           </div>
         </footer>
       </div>
-    </Router>
   );
 }
 
