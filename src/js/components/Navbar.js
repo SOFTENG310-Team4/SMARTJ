@@ -25,7 +25,7 @@ const Navbar = () => {
         localStorage.removeItem("token");
         setIsAuthenticated(false);
         setProfile(null);
-        window.location.reload();
+        window.location.href = "/";
     }
 
 

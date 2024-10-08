@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { saveFeedback } from "../services/ProfileService";
-import "../../styles/pages/SummaryPage.css";
+import { saveFeedback, saveLikert } from "../services/ProfileService";
+import LikertScaleComponent from "../components/LikertScaleComponent";
+import { set } from "mongoose";
 
 const SummaryPage = () => {
   // Hook to access the current location object, which contains state from the previous page
@@ -11,6 +12,8 @@ const SummaryPage = () => {
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState("");
   const [loading, setLoading] = useState(false);
+  const answerType = location.state.answerType || "Text";
+  const allBlobs = location.state.allBlobs || [];
 
   // Retrieve interview data from location state or use default values if none is provided
   const interviewData = location.state || {
@@ -27,7 +30,7 @@ const SummaryPage = () => {
     const feedbackFeched = localStorage.getItem("feedbackFetched");
     // Call getFeedback to fetch feedback immediately
     if (!feedbackFeched) {
-      getFeedback()
+      getFeedback();
       localStorage.setItem("feedbackFetched", true);
     }
 
@@ -36,6 +39,9 @@ const SummaryPage = () => {
     };
   }, [interviewData.answers]); // Dependency array ensures this runs only when answers change
 
+  console.log(interviewData);
+
+  // Function to start a new interview, redirects to interview
   const startNewInterview = () => {
     navigate("/interview-settings");
     localStorage.removeItem("feedbackFetched");
@@ -47,15 +53,18 @@ const SummaryPage = () => {
     localStorage.removeItem("feedbackFetched");
   };
 
+  // Fetches feedback via OpenAI API
   const getFeedback = async () => {
     setLoading(true);
+
+    // Checks if the answer is empty and handles accordingly
     if (interviewData.answers === "") {
       setFeedback("No answers provided. Unable to provide feedback.");
       setLoading(false);
       return;
     }
-
     try {
+      // Calls OpenAI API with the users questiosn and answers to get feedback
       const response = await fetch(
         "https://api.openai.com/v1/chat/completions",
         {
@@ -89,38 +98,67 @@ const SummaryPage = () => {
       );
 
       const data = await response.json();
-
+      // Handle API errors and output error code
       if (!response.ok) {
-        // Handle API errors and output error code
         setFeedback(
           `Error ${response.status}: ${
             data.error?.message || "An unknown error occurred."
           }`
         );
         console.error("API Error:", response.status, data.error);
-        await saveFeedback("", interviewData);
-      } else {
-        setFeedback(data.choices[0].message.content.trim());
-        console.log(data.choices[0].message.content.trim());
-        await saveFeedback(data.choices[0].message.content.trim(), interviewData);
+        return; // Exit the function if there's an error
       }
+
+      setFeedback(data.choices[0].message.content.trim());
+      console.log(data.choices[0].message.content.trim());
+      await saveFeedback(data.choices[0].message.content.trim(), interviewData);
     } catch (error) {
       // Handle network errors and log them
       console.error("Network Error:", error);
       setFeedback(
         "Unable to provide feedback at the moment. Error: " + error.message
       );
-      await saveFeedback("", interviewData);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="container mt-5">
-      <h1 className="summary-heading">Interview Summary</h1>
+  // Making array to set likert scale questions
+  const likertQuestions = [
+    "My answer directly addressed the question asked.",
+    "My answer was concise and to the point.",
+    "I demonstrated my skills and experience in my answer.",
+  ];
 
-      {loading ? (
+  const changeLikert = (videoIndex, questionIndex, value) => {
+    const newLikertValues = [...likertValues];
+    newLikertValues[videoIndex][questionIndex] = value;
+    setLikertValues(newLikertValues);
+  };
+
+  const [likertValues, setLikertValues] = useState(
+    allBlobs.map(() => Array(likertQuestions.length).fill(0))
+  );
+
+  const allLikertFilled = () => {
+    return likertValues.every((video) => video.every((value) => value !== 0));
+  };
+
+  const handleLikertSubmit = () => {
+    if (allLikertFilled() && localStorage.getItem("token")) {
+      saveLikert(likertValues, interviewData);
+      navigate("/my-profile");
+      console.log(likertValues);
+    } else if (!localStorage.getItem("token")) {
+      alert("Please log in to submit feedback.");
+    } else {
+      alert("Please fill out all the likert scale questions.");
+    }
+  };
+
+  const setContent = () => {
+    if (answerType === "Text") {
+      return loading ? (
         <div className="alert alert-info mt-3" role="alert">
           <strong>Loading feedback...</strong>
         </div>
@@ -130,7 +168,40 @@ const SummaryPage = () => {
             <strong>Feedback:</strong> {feedback}
           </div>
         )
-      )}
+      );
+    } else {
+      return (
+        <div className="video-replays">
+          {allBlobs &&
+            allBlobs.map((blob, videoIndex) => (
+              <div key={videoIndex} className="video-container">
+                <h5>Question {videoIndex + 1}</h5>
+                <video src={URL.createObjectURL(blob)} controls />
+                {likertQuestions.map((question, questionIndex) => (
+                  <LikertScaleComponent
+                    key={questionIndex}
+                    question={question}
+                    groupName={`likert-${videoIndex}-${questionIndex}`}
+                    setAnswer={(value) =>
+                      changeLikert(videoIndex, questionIndex, value)
+                    }
+                  />
+                ))}
+              </div>
+            ))}
+          <button className="btn btn-primary mt-3" onClick={handleLikertSubmit}>
+            Submit Likert Values
+          </button>
+        </div>
+      );
+    }
+  };
+
+  return (
+    <div className="container mt-5">
+      <h1 className="display-4 text-center mb-5">Interview Summary</h1>
+
+      {setContent()}
 
       <div className="d-flex flex-column justify-content-center align-items-center">
         <h5 className="mb-4">Questions and Answers:</h5>

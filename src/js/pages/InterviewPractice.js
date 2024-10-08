@@ -24,6 +24,7 @@ function InterviewPractice() {
   const [questions, setQuestions] = useState([]); // Array for questions
   const [textAnswerDuration, setTextAnswerDuration] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(""); // State for the current question
+  const [allBlobs, setAllBlobs] = useState([]); // State to store all video blobs
 
   // State to store the start time of the interview
   const [startTime, setStartTime] = useState(null);
@@ -31,6 +32,14 @@ function InterviewPractice() {
   useEffect(() => {
     setStartTime(Date.now());
   }, []);
+
+  // listener for changes to recordedChunks and making blobs
+  useEffect(() => {
+    if (recordedChunks.length > 0) {
+      const blob = new Blob(recordedChunks, { type: "video/webm" });
+      setAllBlobs((prevBlobs) => [...prevBlobs, blob]);
+    }
+  }, [recordedChunks]);
 
   // Calculate the total duration of the interview, including reading time and answer time
   const totalDuration = Math.floor((Date.now() - startTime) / 1000);
@@ -47,6 +56,8 @@ function InterviewPractice() {
         answers: concatenatedAnswers,
         duration: totalDuration,
         date: new Date().toLocaleDateString(),
+        answerType: answerType,
+        allBlobs: allBlobs,
       },
     });
   }
