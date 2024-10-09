@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { LikertWithValue } from "../components/LikertScaleComponent";
+import "../../styles/pages/ProfileSession.css";
 
 function ProfileSession() {
   const location = useLocation();
@@ -19,11 +20,11 @@ function ProfileSession() {
   console.log(session.questions[0].likert);
   return (
     <div className="container mt-5">
-      <h1 className="display-4 text-center mb-5">Session Details</h1>
+      <h1 className="session-header">Session Details</h1>
       <h5>Date: {new Date(session.date).toLocaleString()}</h5>
       <h5>Duration: {session.duration} seconds</h5>
       {session.medianScore !== undefined ? (
-        <>
+        <div>
           <h5>Median Score: {session.medianScore}</h5>
           <h5>Feedback: {session.gptFeedback}</h5>
 
@@ -44,9 +45,9 @@ function ProfileSession() {
               ))}
             </tbody>
           </table>
-        </>
+        </div>
       ) : (
-        <div className="mt-4">
+        <div className="session-table-container">
           <h3>Likert Questions and Ratings</h3>
           <table className="table table-bordered">
             <thead>

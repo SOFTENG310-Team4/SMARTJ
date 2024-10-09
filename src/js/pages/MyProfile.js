@@ -138,7 +138,7 @@ function MyProfile() {
     : "images/blank-profile-picture.png";
 
   const handleSessionClick = (session) => {
-    navigate(`/ProfileSession`, { state: { session } });
+    navigate(`/profile-session`, { state: { session } });
   };
 
   return (

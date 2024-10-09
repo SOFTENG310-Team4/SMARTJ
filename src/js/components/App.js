@@ -18,6 +18,7 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 import { Buffer } from "buffer";
 import Navbar from "./Navbar";
+import ProfileSession from "../pages/ProfileSession";
 
 function App() {
   const location = useLocation();
@@ -38,6 +39,7 @@ function App() {
             <Route path="/job-finder" element={<JobFinder />} />
             <Route path="/contact-us" element={<ContactUs />} />
             <Route path="/my-profile" element={<MyProfile />} />
+            <Route path="/profile-session" element={<ProfileSession />}/>
             <Route path="/summary" element={<SummaryPage />} />
           </Routes>
         </div>
