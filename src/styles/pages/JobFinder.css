@@ -1,0 +1,21 @@
+.jobfinder-header {
+    display: block;
+    font-weight: 900;
+    font-size: 4rem;
+    font-style: italic;
+    filter: drop-shadow(0px 2px 1px rgba(0,0,0,0.35));
+}
+
+.jobfinder-subheading {
+    font-style: normal;
+    font-size: 1.5rem;
+    font-weight: 700;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.gradient-text {
+    background: linear-gradient(90deg, #2F27CE 0%, #8B3DFF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

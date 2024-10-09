@@ -151,7 +151,8 @@ app.get("/api/profile", async (req, res) => {
 
     // Validation for if the user is not found
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      const msg = "User not found" + decoded.id;
+      return res.status(404).json({ message: msg });
     }
 
     console.log(user.profile);
