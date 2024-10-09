@@ -190,7 +190,7 @@ const SummaryPage = () => {
                 ))}
               </div>
             ))}
-          <button className="btn btn-primary mt-3" onClick={handleLikertSubmit}>
+          <button className="summary-button mt-4 mb-4" onClick={handleLikertSubmit}>
             Submit Likert Values
           </button>
         </div>
