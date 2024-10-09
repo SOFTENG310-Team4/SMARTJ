@@ -1,20 +1,20 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import InterviewPractice from "../../pages/InterviewPractice";
-import Summary from "../../pages/SummaryPage";
+import InterviewPractice from "../js/pages/InterviewPractice";
+import Summary from "../js/pages/SummaryPage";
 
 // Mock the child components that are used in InterviewPractice
-jest.mock("../components/QuestionComponent", () => () => (
+jest.mock("../js/components/QuestionComponent", () => () => (
   <div>Mock Question</div>
 ));
-jest.mock("../components/VideoRecordingComponent", () => (props) => (
+jest.mock("../js/components/VideoRecordingComponent", () => (props) => (
   <div>
     Mock VideoRecordingComponent
     <button onClick={props.goToSummary}>End Recording</button>
   </div>
 ));
-jest.mock("../components/TextAnswerComponent", () => (props) => (
+jest.mock("../js/components/TextAnswerComponent", () => (props) => (
   <div>
     Mock TextAnswerComponent
     <button onClick={() => props.onSubmit("Sample answer", 60)}>

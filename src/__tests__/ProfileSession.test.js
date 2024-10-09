@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import ProfileSession from "../../pages/ProfileSession";
+import ProfileSession from "../js/pages/ProfileSession";
 
 const mockSession = {
   id: "1",

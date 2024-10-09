@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import JobFinder from "../../pages/JobFinder";
+import JobFinder from "../js/pages/JobFinder";
 describe("JobFinder component", () => {
   beforeEach(() => {
     render(<JobFinder />);

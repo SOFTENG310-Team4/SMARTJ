@@ -4,7 +4,7 @@
 
 const request = require("supertest");
 const mongoose = require("mongoose");
-const app = require("../../../Server");
+const app = require("../js/server/Server");
 
 let connection;
 let token;

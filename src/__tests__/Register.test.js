@@ -1,12 +1,12 @@
 import React, { act } from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
-import Register from "../../pages/Register";
-import Login from "../../pages/Login";
+import Register from "../js/pages/Register";
+import Login from "../js/pages/Login";
 import mongoose from "mongoose";
-import { registerUser } from "../../services/ProfileService";
+import { registerUser } from "../js/services/ProfileService";
 
-jest.mock("../services/ProfileService", () => ({
+jest.mock("../js/services/ProfileService", () => ({
   registerUser: jest.fn(),
 }));
 
