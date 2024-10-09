@@ -121,6 +121,7 @@ function InterviewPractice() {
                     timeLimit={timeLimit}
                     setRecordedChunks={setRecordedChunks}
                     recordedChunks={recordedChunks}
+                    goNextPage={increment}
                     goToSummary={goToSummary}
                 />
             )}
